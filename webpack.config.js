@@ -1,8 +1,31 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-
-module.exports = {
+const {resolve} = require('path'),
+      HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports={
   mode: 'development',
+  entry: {
+    login: './src/pages/login/index.js',
+    main: './src/pages/main/index.js'
+  },
+  output: {
+    filename: 'js/[name].js',
+    path: resolve(__dirname,'build')
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'login/login.html',
+      template: './src/pages/login/login.html',
+      chunks: ['login']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: './src/pages/main/main.html',
+      chunks: ['main']
+    })
+  ],
+  devServer: {
+    open: true,
+    port: 8080
+  },
   module: {
     rules: [
       {
@@ -10,41 +33,17 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(jpg|png|jpeg|gif)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 8*1024,
-          esModule: false,
-          outputPath: 'imgs'
-        }
-      },
-      {
         test: /\.html$/,
-        loader: 'html-loader'
+        use: ["html-loader"]
       },
       {
-        exclude: /\.(html|css|jpg|jpeg|gif|html)$/,
-        loader: 'file-loader',
-        options: {
-          outputPath: 'media'
-        }
+        test: /\.(png|jpg|gif|jpeg)$/,
+        loader: 'url-loader'
+      },
+      {
+        exclude: /\.(html|css|js|jpg|jpeg|gif|png)$/,
+        loader: 'file-loader'
       }
     ]
-  },
-  entry: './src/js/index.js',
-  output: {
-    filename: 'js/bundle.js',
-    path: path.resolve(__dirname, 'build')
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html'
-    })
-  ],
-  devServer: {
-    contentBase: path.resolve(__dirname, 'build'),
-    open: true,
-    port: 8080,
-    compress: true
   }
 }

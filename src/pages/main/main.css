@@ -1,0 +1,297 @@
+body{
+  margin: 0;
+  padding: 0;
+  background-color: rgb(231, 231, 231);
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+.hide{
+  display: none;
+}
+.shadow{
+  box-shadow: 0 0 30px rgb(226, 226, 226);
+}
+header{
+  box-sizing: border-box;
+  background-color: #fff;
+  border-top: 2px solid #eb7350;
+  height: 50px;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+header .container{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 50px;
+  margin: 0 auto;
+  position: relative;
+}
+@media screen and (min-width: 1200px) {
+  header .container{
+    width: 1280px;
+  }
+}@media screen and (max-width: 1119px) {
+  header .container{
+    width: 768;
+  }
+}
+header .container img{
+  display: block;
+}
+header .container .search-container{
+  display: flex;
+  position: relative;
+}
+header .container .search-container input{
+  display: block;
+  box-sizing: border-box;
+  width:500px;
+  height: 30px;
+  outline: none;
+  border: none;
+  background-color: rgb(236, 236, 236);
+  padding: 0 40px 0 10px;
+  position: relative;
+  transition: 0.2s;
+}
+header .container .search-container .search-bottom-bar{
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 0;
+  background-color: #eb7350;
+  bottom: -3px;
+  left: 50%;
+  transition: 0.2s;
+}
+header .container .search-container input:focus ~.search-bottom-bar{
+  left: 0;
+  width: 500px;
+}
+header .container .search-container input:focus{
+  background-color: rgb(245, 245, 245);
+}
+header .container .search-container .search-icon{
+  width: 25px;
+  height: auto;
+}
+header .container .search-container .search-icon-div{
+  cursor: pointer;
+  position: absolute;
+  height: 30px;
+  right: 10px;
+  top: 0;
+}
+header .container .search-container .search-dragdown{
+  position: absolute;
+  box-sizing: border-box;
+  top: 33px;
+  width: 100%;
+  padding: 2px;
+  background-color: #fff;
+}
+header .container .search-container .search-dragdown .li{
+  font-size: 12px;
+  padding: 9px 32px 9px 13px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: 0.2s;
+  color: rgb(128, 128, 128);
+  position: relative;
+}
+header .container .search-container .search-dragdown .li:nth-child(2) .round{
+  background-color: red;
+}
+header .container .search-container .search-dragdown .li:nth-child(3) .round{
+  background-color: rgb(255, 160, 50);
+}
+header .container .search-container .search-dragdown .li:hover{
+  color: #eb7350;
+  background-color: rgb(241, 241, 241);
+}
+header .container .search-container .search-dragdown .li .round{
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+  color: #fff;
+  border-radius: 50%;
+  background-color: grey;
+  margin-right: 5px;
+}
+header .container .search-container .search-dragdown .li .hot-tag{
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  width: 17px;
+  height: 17px;
+  border-radius: 3px;
+  background-color: #eb7350;
+}
+header .container .log-reg div{
+  position: relative;
+  height: 30px;
+  color: rgb(110, 110, 110);
+  line-height: 30px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  cursor: pointer;
+}
+header .container .log-reg .register::after{
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;
+  width: 1px;
+  height: 50%;
+  background-color: rgb(110, 110, 110);
+}
+.content{
+  width: 1170px;
+  padding: 66px 0 0;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+.content .left-nav{
+  position: sticky;
+  top: 50px;
+  height: 200px;
+  background-color: #fff;
+  width: 110px;
+  padding: 0;
+  margin: 0;
+}
+.content .left-nav .left-ul{
+  width: 110px;
+  margin: 0;
+}
+.content .left-nav .left-ul li{
+  margin: 0;
+  list-style: none;
+}
+.content .left-nav .left-ul li a{
+  display: block;
+  text-decoration: none;
+  width: 110px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: black;
+  font-size: 18px;
+  transition: 0.1s;
+}
+.content .left-nav .left-ul li a:hover{
+  background-color: #eb7350;
+  color: #fff;
+  cursor: pointer;
+}
+.home{
+  width: 660px;
+  background-color: #fff;
+}
+.home a{
+  overflow: hidden;
+  display: block;
+  cursor: pointer;
+}
+.home .slides{
+  width: 660px;
+  height: 308px;
+  overflow: hidden;
+  position: relative;
+}
+.home .slides .nav-dot{
+  position: absolute;
+  bottom: 0px;
+  height: 20px;
+  width: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.home .slides .nav-dot .dot{
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 5px;
+  transition: 0.3s;
+  background-color: grey;
+}
+.home .slides .slide-bar{
+  position: relative;
+  width: 1980px;
+  display: flex;
+  transition: 0.4s;
+}
+.home .slides .slide{
+  width: 660px;
+  display: flex;
+  justify-content: space-between;
+}
+.home .slides .slide span{
+  font-size: 12px;
+}
+.home .slides .slide .discuss{
+  margin-right: 20px;
+}
+.home .slides .slide .img-container-left{
+  position: relative;
+  width: 512px;
+  height: 288px;  
+}
+.home .slides .slide .img-container-left img{
+  width: 512px;
+  height: 288px; 
+}
+.home .slides .slide .img-container-left h1{
+  font-size: 18px;
+  margin: 0;
+}
+.home .slides .slide .img-container-left .img-intro{
+  transform: translateY(40%);
+  transition: 0.2s;
+}
+.home .slides .slide a:hover .img-intro{
+  transform: translateY(0);
+}
+.home .slides .slide .img-container-right{
+  position: relative;
+  height: 288px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.home .slides .slide .img-container-right img{
+  width: 140px;
+  height: 140px;
+}
+.home .slides .slide .img-container-right .img-container-small{
+  height: 140px;
+  position: relative;
+}
+.home .slides .slide .img-container-right .img-container-small h1{
+  font-size: 14px;
+  margin: 0;
+}
+.home .slides .slide .img-intro{
+  color: #fff;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1));
+  padding: 10px 10px 6px;
+  box-sizing: border-box;
+}
