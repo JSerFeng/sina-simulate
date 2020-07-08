@@ -1,10 +1,15 @@
 import './main.css'
 import axios from '../../utils/axios'
 import Mock from 'mockjs'
+import {Vdom,createElement,render,setAttr, mount} from '../../utils/vdom2dom'
+
+import commentsIcon from '../../imgs/comments.png'
+import thumbIcon from '../../imgs/thumb.png'
 
 const Random = Mock.Random
+const c = createElement
 
-// 请求到的数据
+// 模拟请求到的数据
 const baseData = {
   // 输入搜索框时
   searching: 
@@ -88,10 +93,53 @@ const baseData = {
         read: Random.integer(0, 13524)
       }
     ], 
+  ],
+  //请求列表
+  lists: [
+    {
+      avatar: Random.dataImage('158x102'),
+      username: Random.cname(),
+      dateTime: Random.datetime('yyyy-MM-dd A HH:mm:ss'),
+      comments: Random.integer(0, 9999999),
+      thumbs: Random.integer(0, 9999999),
+      title: Random.cparagraph(5, 81),
+      video: 'https://f.video.weibocdn.com/ACxmxLFvlx07EDkW84Io01041200BTb30E010.mp4?label=mp4_hd&template=852x480.25.0&trans_finger=62b30a3f061b162e421008955c73f536&ori=0&ps=4ub7gI97adQ&Expires=1594109916&ssig=5BQ28fbanM&KID=unistore,video'
+    },{
+      avatar: Random.dataImage('158x102'),
+      username: Random.cname(),
+      dateTime: Random.datetime('yyyy-MM-dd A HH:mm:ss'),
+      comments: Random.integer(0, 9999999),
+      thumbs: Random.integer(0, 9999999),
+      title: Random.cparagraph(5, 81),
+      video: 'https://f.video.weibocdn.com/ACxmxLFvlx07EDkW84Io01041200BTb30E010.mp4?label=mp4_hd&template=852x480.25.0&trans_finger=62b30a3f061b162e421008955c73f536&ori=0&ps=4ub7gI97adQ&Expires=1594109916&ssig=5BQ28fbanM&KID=unistore,video'
+    },{
+      avatar: Random.dataImage('158x102'),
+      username: Random.cname(),
+      dateTime: Random.datetime('yyyy-MM-dd A HH:mm:ss'),
+      comments: Random.integer(0, 9999999),
+      thumbs: Random.integer(0, 9999999),
+      title: Random.cparagraph(5, 81),
+      img: 'https://wx1.sinaimg.cn/thumb180/a1c3de7ely1gghdic621wj20u00u0dnj.jpg'
+    },{
+      avatar: Random.dataImage('158x102'),
+      username: Random.cname(),
+      dateTime: Random.datetime('yyyy-MM-dd A HH:mm:ss'),
+      comments: Random.integer(0, 9999999),
+      thumbs: Random.integer(0, 9999999),
+      title: Random.cparagraph(5, 81),
+      video: 'https://f.video.weibocdn.com/ACxmxLFvlx07EDkW84Io01041200BTb30E010.mp4?label=mp4_hd&template=852x480.25.0&trans_finger=62b30a3f061b162e421008955c73f536&ori=0&ps=4ub7gI97adQ&Expires=1594109916&ssig=5BQ28fbanM&KID=unistore,video'
+    },{
+      avatar: Random.dataImage('158x102'),
+      username: Random.cname(),
+      dateTime: Random.datetime('yyyy-MM-dd A HH:mm:ss'),
+      comments: Random.integer(0, 9999999),
+      thumbs: Random.integer(0, 9999999),
+      title: Random.cparagraph(5, 81),
+      img: 'https://wx3.sinaimg.cn/thumb180/6a5ce645ly1gghg8n5qlrj20dw0990t9.jpg'
+    },
   ]
 }
-
-// 搜索框输入时
+// 搜索框输入时展示热度排行（防抖）
 class Searching {
   constructor (method, url) {
     this.$search = document.querySelector('.search-input')
@@ -171,9 +219,9 @@ new Searching('GET','url')
 // 生成轮播图
 class Slide {
   constructor (method, url, delay=1000) {
-    this.get(method, url)
     this.i = 1
     this.prev = 0
+    this.get(method, url)
   }
   get (method, url) {
     // axios(method,url).then(data=>{
@@ -248,3 +296,91 @@ class Slide {
 }
 new Slide('GET','url')
 
+// 生成主页图文视频列表
+class List {
+  constructor (method, url, data) {
+    // axios(method, url, data.then(data=>{
+    //   this.get(data)
+    // }))
+    this.run(baseData.lists)
+  }
+  run (res) {
+    const $lists = document.getElementsByClassName('lists')[0]
+    res.forEach(data=>{
+      if (data.video) {
+        $lists.appendChild( this.createVideoEle(data) )
+      } else {
+        $lists.appendChild( this.createImgEle(data) )
+      }
+    })
+  }
+  // 创建视频栏目
+  createVideoEle (data) {
+      const vdom = c('div',{class: 'list'}, 
+      [
+        c('div', {class: 'video'}, 
+        [
+          c('video',{controls:'controls', src:data.url},'')
+        ]),
+        c('a', {}, [
+          c('div', {class: 'list-content-video'}, [
+            c('div', {class: 'list-title'}, data.title),
+
+            c('div', {class: 'sub-info'}, [
+              c('img', {class: 'avatar', src: data.avatar}),
+              c('span', {}, data.username),
+              c('span', {}, data.dateTime)
+            ]),
+
+            c('div', {class: 'bottom'}, [
+              c('div', {class: 'comments'}, [
+                c('img', {class: 'comments', src: commentsIcon, alt: '评论'}, undefined)
+              ]),
+              c('span', {}, data.comments),
+              c('div', {class: 'thumbs'}, [
+                c('img', {class: 'thumb', src: thumbIcon, alt: '点赞'},undefined)
+              ]),
+              c('span', {}, data.thumbs),
+            ])
+          ])
+        ])
+      ])
+      
+      return render(vdom)
+  }
+  // 创建图文栏目
+  createImgEle (data) {
+    const vdom = c('div', {class: "list-img list"}, 
+    [
+      c('div', {class: 'img'}, [
+        c('img', {src: data.img})
+      ]),
+      c('a', {}, [
+        c('div', {class: 'list-content-img'},[
+          c('div', {class: 'list-title'}, data.title),
+          c('div', {class: 'foot-bar'}, [
+            c('div', {class: 'sub-info'}, [
+              c('img', {class: 'avatar', src: data.avatar}, undefined),
+              c('span', {}, data.username),
+              c('span', {}, data.dateTime)
+            ]),
+            c('div', {class: 'bottom'}, [
+              c('div', {class: 'comments'}, [
+                c('img', {src: commentsIcon})
+              ]),
+              c('span', {}, data.comments),
+              c('div', {class: 'thumbs'}, [
+                c('img', {src: thumbIcon})
+              ]),
+              c('span', {}, data.thumbs)
+            ])
+          ])
+        ])
+      ])
+    ])
+    
+    return render(vdom)
+  }
+  
+}
+new List('POST', 'url', 'data')
