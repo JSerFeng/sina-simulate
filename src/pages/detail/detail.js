@@ -1,5 +1,5 @@
-// css
-import './main.css'
+import './detail.css'
+import '../../utils/header.css'
 // 引入工具
 import axios from '../../utils/axios'
 import Mock from 'mockjs'
@@ -8,10 +8,11 @@ import { reactive, effect } from '../../utils/reactive'
 import { show } from '../../utils/showToast'
 
 // 引入图标地址
+import emoji from '../../imgs/emoji.png'
+import favIcon from '../../imgs/keep.png'
+import shareIcon from '../../imgs/share.png'
 import commentsIcon from '../../imgs/comments.png'
-import commentsActive from '../../imgs/comments-active.png'
 import thumbIcon from '../../imgs/thumb.png'
-import thumbActive from '../../imgs/thumb-active.png'
 import searchIcon from '../../imgs/search-icon.png'
 import searchIconActive from '../../imgs/search-icon1.png'
 import successImg from '../../imgs/success.png'
@@ -20,6 +21,7 @@ import err from '../../imgs/err.png'
 
 const Random = Mock.Random
 const c = createElement
+
 
 
 // 模拟请求到的数据
@@ -193,7 +195,142 @@ const baseData = {
     cid: Random.integer(0, 99999)
   },]
 }
-// 搜索框输入时展示热度排行（防抖）
+
+
+// 详情页面
+class Init {
+  constructor() {
+    this.init()
+  }
+  init() {
+    if (!localStorage.getItem('userInfo')) {
+      alert('请先登陆')
+      window.history.go(-1)
+    }
+    const param = window.location.search.slice(5)
+    console.log(param);
+    this.getData(param)
+  }
+  fresh(data) {
+    const $main = document.createElement('div')
+    $main.innerHTML = `<div class="_detail">
+      <div class="page">
+        <div class="above">
+          <img alt="" class="avatar">
+          <div class="comment-content">
+            <h1 class="username">${data.user.username}</h1>
+            <span class="time">${new Date(data.adate).toLocaleString()}</span>
+            <p>
+              ${data.aword}
+            </p>
+            <img class="aimage" src="${data.aimage}">
+          </div>
+        </div>
+        <ul class="footbar">
+          <li class="item fav ${data.flag.isfavorite==true?'on':''}" data-status="${data.flag.isfavorite==true?1:0}"><img src=${favIcon}>收藏</li>
+          <li class="item"><img src=${shareIcon}>转发</li>
+          <li class="item ilike ${data.flag.islike==true?'on':''}" data-status="${data.flag.islike==true?1:0}"><img src=${thumbIcon}><span>${data.alikemount}</span></li>
+          <li class="item"><img src=${commentsIcon}><span>0</span></li>
+        </ul>
+      </div>
+      <div class="comment">
+        <div class="sub">
+          <img
+            src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD"
+            class="avatar">
+          <div class="comment-r">
+            <input type="textarea">
+            <input type="submit" value="评论">
+            <img class="emoji" src=${emoji}>
+          </div>
+        </div>
+      
+        <div class="lists">
+          <div class="list">
+            <img
+              src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD"
+              class="avatar">
+            <div class="content">
+              <p class="detail"><span class="reply-name">ly456454</span> ipsum dolor sit, amet consectetur adipisicing elit.
+                Corrupti
+                facere, repellendus laboriosam, harum voluptates incidunt deserunt iure reprehenderit ullam dicta, dignissimos
+                labore cumque odit! Atque accusamus hic tenetur cupiditate quia!</p>
+              <div class="foot-bar">
+                <div class="time">07-12 22:10</div>
+                <div>
+                  <img src=${thumbIcon} class="thumb">
+                  <span>123</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`
+    const m = document.querySelector('.main')
+    console.log(m)
+    m.appendChild($main)
+    this.addEvent()
+  } 
+  addEvent() {
+    const like = document.getElementsByClassName('ilike')[0]
+    const fav = document.getElementsByClassName('fav')[0]
+    const aid = window.location.search.slice(5)
+    like.onclick = e => {
+      const status = parseInt(like.getAttribute('data-status'))
+      like.setAttribute('data-status', status ? 0 : 1)
+      const text = like.getElementsByTagName('span')[0]
+      if (status) {
+        text.innerText = text.innerText - 1
+      } else {
+        text.innerText = parseInt(text.innerText) + 1
+      }
+      axios.get('/article/changeLikeStatus', { status, aid }).then(
+        res => {
+          if (status) {
+            like.classList.remove('on')
+          } else {
+            like.classList.add('on')
+          }
+        },
+        err => {
+          show('操作失败', 'fail')
+        }
+      )
+    }
+    fav.onclick =()=>{
+      const status = parseInt(fav.getAttribute('data-status'))
+      fav.setAttribute('data-status', status ? 0 : 1)
+
+      axios.get('/article/changeFavStatus', { status, aid }).then(
+        res => {
+          if (status) {
+            fav.classList.remove('on')
+          } else {
+            fav.classList.add('on')
+          }
+        },
+        err => {
+          show('操作失败', 'fail')
+        }
+      )
+    }
+  }
+  getData(param) {
+    axios.get(`/article/findDetailOne`, {aid:param}).then(
+      res => {
+        this.fresh(res)
+      },
+      err => {
+        console.log(err);
+      }
+    )
+  }
+}
+new Init()
+
+
+// 输入框
 class Searching {
   constructor(method, url) {
     this.$search = document.querySelector('.search-input')
@@ -248,6 +385,7 @@ class Searching {
       })
     this.$show.onmouseover = () => { this.focus = true }
     this.$show.onmouseout = () => { this.focus = false }
+
   }
   refresh(res) {
     this.$show.innerHTML = `<div style="color:#eb7350" class="li">查看完整热搜榜》</div>`
@@ -268,16 +406,13 @@ class Searching {
         div.appendChild(hotTag)
       }
       div.classList.add('li')
-      div.onclick = () => {
-        window.open(`./static/search.html?${data.aid}`);
-      }
       this.$show.appendChild(div)
     })
   }
   btnEvent() {
     let userInfo
     const $log = document.getElementsByClassName('log-reg')[0]
-    const $login = document.getElementsByClassName('log-reg')[1]
+    const $login = document.getElementsByClassName('log-reg')[0]
     const $user = document.getElementsByClassName('show-info')[0]
     const $username = $user.getElementsByClassName('user')[0]
     const $exit = document.getElementsByClassName('exit')[0]
@@ -286,22 +421,23 @@ class Searching {
       $username.innerText = userInfo.username
 
       $user.onclick = () => {
-        window.open('./static/user.html', '_self')
+        console.log('user点击');
+        window.open('./user.html')
       }
-
       $log.classList.add('hide')
       $login.classList.add('hide')
-        -
-        $user.classList.remove('hide')
+
+      $user.classList.remove('hide')
 
       $exit.onclick = onClick
       function onClick(e) {
         e.stopPropagation()
         $exit.onclick = null
+        console.log('exit点击');
         axios.post('/user/exit', {}).then(
           value => {
             localStorage.removeItem('userInfo')
-            window.open('./index.html', '_self')
+            window.open('./search.html', '_self')
           },
           err => {
             show('注销失败', 'fail')
@@ -326,7 +462,14 @@ class Searching {
     // 点击搜索
     $search.onclick = () => {
       // axios
-      window.open(`./static/search.html?aword=${this.$search.value}`)
+      axios.get(`/article/pageQuery`, { aword: this.$search.value }).then(
+        res => {
+          window.open(`./search.html?aword=${this.$search.value}`)
+        },
+        err => {
+          show('搜索失败了 ' + err, 'fail')
+        }
+      )
     }
   }
 }
@@ -344,7 +487,6 @@ class Login$Register {
   // 移入移出变色，点击弹出登录窗口
   run() {
     const that = this
-    const $showtoast = document.getElementById('show-toast')
     const $login = document.querySelector('.login')
     const $register = document.querySelector('.register')
     // 移入变色
@@ -355,55 +497,8 @@ class Login$Register {
       this.style.color = '#6e6e6e'
     }
     // 点击事件
-    $showtoast.onclick = $login.onclick = $register.onclick = function () {
+    $login.onclick = $register.onclick = function () {
       that.showToast(this.className)
-    }
-
-    const $form = document.getElementsByClassName('log2')[0]
-    const $formBtn = document.getElementsByClassName('log2')[1]
-    const telephone = $form.getElementsByTagName('input')[0]
-    const password = $form.getElementsByTagName('input')[1]
-
-    console.log($formBtn);
-    $formBtn.onclick = login
-    function login(e) {
-      e.preventDefault()
-
-      if(telephone.value && password.value) {
-        $formBtn.onclick = (e) => {
-          e.preventDefault()
-          show('正在登陆，请稍等片刻...')
-        }
-        axios.post('/user/login', { telephone: telephone.value, password: password.value }).then(
-          res => {
-            if (!res.flag) {
-              return Promise.reject(res.errorMsg, 'fail')
-            } else {
-              show('登陆成功!')
-              return axios.post('/user/findLoginUser', {})
-            }
-          },
-          err => {
-            show('登陆失败: ' + err, 'fail')
-          }
-        ).then(
-          data => {
-            if (data) {
-              localStorage.setItem('userInfo', JSON.stringify(data))
-              window.open('./static/user.html')
-              window.open('./index.html', '_self')
-            }
-          },
-          err => {
-            show('登陆失败:  ' + err, 'fail')
-          }
-        ).finally(() => {
-          $formBtn.onclick = login
-        })
-      } else {
-        show('请输入账号密码！','fail')
-      }
-      return false;
     }
 
   }
@@ -442,12 +537,10 @@ class Login$Register {
       observed.type = this.className.indexOf('log') == -1 ? 'register' : 'login'
     }
     $mask.onclick = $cancelBtn.onclick = () => {
-
       $toast.classList.add('hide')
       $mask.classList.add('hide')
       $main.classList.remove('blur')
     }
-
     this.typing()
   }
   // 输入时的提示信息警告信息等，登陆注册按钮的隐藏显示和点击
@@ -490,69 +583,67 @@ class Login$Register {
         }, 300)
       })
     })
-    const clickEvent = () => {
+
+    $btn.onclick = () => {
       let phone = $inputs[0].value
       let password = $inputs[1].value
       let username = $inputs[3].value
       let mail = $inputs[4].value
+
       const img = document.createElement('img')
       img.src = loading
-      // axios this.method...
       if ($btn.innerHTML === '登陆') {
+        // axios this.method...
         axios.post('/user/login', {
           telephone: phone,
           password
         }).then(
           res => {
-            if (!res.flag) {
-              return Promise.reject(res.errorMsg, 'fail')
-            } else {
-              show('登陆成功!')
+            if (!res.flag){
+              return Promise.reject(res.errorMsg)
+            }else{
+              show('登陆成功！')
               return axios.post('/user/findLoginUser', {})
             }
-          },
-          err => {
-            show('登陆失败: ' + err, 'fail')
+          }, err => {
+            return Promise.reject(err)
           }
         ).then(
-          data => {
-            if (data) {
-              localStorage.setItem('userInfo', JSON.stringify(data))
-              window.open('./static/user.html', '_self')
+          res => {
+            if (res) {
+              localStorage.setItem('userInfo', JSON.stringify(res))
+              window.open('./user.html', '_self')
             }
           },
           err => {
-            show('登陆失败:  ' + err, 'fail')
+            show('登陆失败 ' + err, 'fail')
           }
-        ).finally(() => {
-          $btn.removeChild(img)
-          $btn.onclick = clickEvent
-        })
+        ).finally(
+          () => {
+            $btn.removeChild(img)
+            $btn.onclick = clickEvent
+          }
+        )
       } else {
+        // axios this.method...
         axios.post('/user/register', {
           telephone: phone,
           password,
           username,
           email: mail
-        }).then(
-          res => {
-            show('注册成功，请登陆')
-          },
-          err => {
-            show('错误' + err, 'fail');
-          }
-        ).finally(() => {
+        }).then(res => {
+          show('注册成功， 请登陆')
           $btn.removeChild(img)
-          $btn.onclick = clickEvent
+        }, err => {
+          show('注册失败，请检查网络\n' + err, 'fail');
+          $btn.removeChild(img)
         })
       }
       $btn.appendChild(img)
-      $btn.onclick = null
     }
-    $btn.onclick = clickEvent
   }
   // 输入form表单的检测
-  check(type, value, password = '') {
+  check(type, value) {
     let errMsg = ''
     switch (type) {
       // 手机号
@@ -614,246 +705,3 @@ class Login$Register {
   }
 }
 new Login$Register('')
-
-
-// 生成轮播图
-class Slide {
-  constructor(method, url, delay = 1000) {
-    this.i = 1
-    this.prev = 0
-    this.get(method, url)
-  }
-  get(method, url) {
-    // axios(method,url).then(data=>{
-    //   this.generate(data)  
-    // })
-    this.generate(baseData.slide)
-  }
-  generate(data) {
-    const $slides = document.getElementsByClassName('slide-bar')[0]
-    for (let i = 0; i < $slides.children.length; i++) {
-      $slides.children[i].querySelector('.img0').src = data[i][0].imgUrl
-      $slides.children[i].querySelector('.img1').src = data[i][1].imgUrl
-      $slides.children[i].querySelector('.img2').src = data[i][2].imgUrl
-
-      $slides.children[i].getElementsByClassName('intro')[0].innerHTML = data[i][0].title
-      $slides.children[i].getElementsByClassName('intro')[1].innerHTML = data[i][1].title
-      $slides.children[i].getElementsByClassName('intro')[2].innerHTML = data[i][2].title
-
-      $slides.children[i].querySelector('.discuss').innerHTML = data[i][0].discuss + '讨论'
-      $slides.children[i].querySelector('.read').innerHTML = data[i][0].read + '阅读'
-    }
-    this.run()
-  }
-  run() {
-    const $dots = document.getElementsByClassName('dot')
-    for (let i = 0; i < $dots.length; i++) {
-      $dots[i].onclick = () => {
-        this.to(i)
-      }
-    }
-    this.autoplay()
-  }
-  autoplay() {
-
-    const $slideBar = document.querySelector('.slide-bar')
-    const $dots = document.getElementsByClassName('dot')
-    clearInterval(this.timer)
-
-    this.timer = setInterval(() => {
-      $slideBar.style.transform = `translateX(${-660 * this.i}px)`
-      if (this.prev >= 0) {
-        $dots[this.prev].style.backgroundColor = 'rgb(218, 218, 218)'
-      }
-      $dots[this.i].style.backgroundColor = '#eb7350'
-      this.prev = this.i
-      this.i = this.i == $slideBar.children.length - 1 ? 0 : ++this.i
-
-    }, 3000);
-    $slideBar.onmouseout = () => {
-      this.autoplay()
-    }
-    $slideBar.onmouseover = () => {
-      clearInterval(this.timer)
-    }
-  }
-  to(i) {
-    const $slideBar = document.querySelector('.slide-bar')
-    const $dots = document.getElementsByClassName('dot')
-
-    clearInterval(this.timer)
-    this.i = i
-    if (this.prev >= 0) {
-      $dots[this.prev].style.backgroundColor = 'rgb(218, 218, 218)'
-    }
-    $dots[this.i].style.backgroundColor = '#eb7350'
-    this.prev = this.i
-    $slideBar.style.transform = `translateX(${-660 * this.i}px)`
-    this.i = this.i == $slideBar.children.length - 1 ? 0 : ++this.i
-
-    this.autoplay()
-  }
-}
-new Slide()
-
-
-// 生成主页图文视频列表
-class List {
-  constructor(method, url, data) {
-    // axios(method, url, data.then(data=>{
-    //   this.get(data)
-    // }))
-    this.run(baseData.lists)
-    this.animation()
-  }
-  run(res) {
-    const $lists = document.getElementsByClassName('lists')[0]
-    res.forEach(data => {
-      console.log(data);
-      if (data.video) {
-        const list = this.createVideoEle(data)
-        list.onclick = () => {
-          if (localStorage.getItem('userInfo')) {
-            window.open(`./static/detail.html?aid=${data.aid}`)
-          } else {
-            show('请先登陆~')
-          }
-        }
-        $lists.appendChild(list)
-      } else {
-        const list = this.createImgEle(data)
-        list.onclick = () => {
-          if (localStorage.getItem('userInfo')) {
-            window.open(`./static/detail.html?aid=${data.aid}`)
-          } else {
-            show('请先登陆~')
-          }
-        }
-        $lists.appendChild(list)
-      }
-    })
-  }
-  // 创建视频栏目
-  createVideoEle(data) {
-    const vdom = c('div', { class: 'list' }, [
-      c('div', { class: 'video' }, [
-        c('video', { controls: 'controls', src: data.url }, '')
-      ]),
-      c('a', {}, [
-        c('div', { class: 'list-content-video' }, [
-          c('div', { class: 'list-title' }, [
-            c('span', { class: 'keyword' }, data.keyword),
-            c('span', {}, data.title)
-          ]),
-
-          c('div', { class: 'sub-info' }, [
-            c('img', { class: 'avatar', src: data.avatar }),
-            c('span', {}, data.username),
-            c('span', {}, data.dateTime)
-          ]),
-
-          c('div', { class: 'bottom' }, [
-            c('div', { class: 'comments' }, [
-              c('img', { src: commentsIcon, alt: '评论' }, undefined)
-            ]),
-            c('span', {}, data.comments),
-            c('div', { class: 'thumbs' }, [
-              c('img', { class: 'thumb', src: thumbIcon, alt: '点赞' }, undefined)
-            ]),
-            c('span', {}, data.thumbs),
-          ])
-        ])
-      ])
-    ])
-    return render(vdom)
-  }
-  // 创建图文栏目
-  createImgEle(data) {
-    const vdom = c('div', { class: "list-img list" }, [
-      c('div', { class: 'img' }, [
-        c('img', { src: data.img })
-      ]),
-      c('a', {}, [
-        c('div', { class: 'list-content-img' }, [
-          c('div', { class: 'list-title' }, [
-            c('span', { class: 'keyword' }, data.keyword),
-            c('span', {}, data.title)
-          ]),
-          c('div', { class: 'foot-bar' }, [
-            c('div', { class: 'sub-info' }, [
-              c('img', { class: 'avatar', src: data.avatar }, undefined),
-              c('span', {}, data.username),
-              c('span', {}, data.dateTime)
-            ]),
-            c('div', { class: 'bottom' }, [
-              c('div', { class: 'comments' }, [
-                c('img', { src: commentsIcon })
-              ]),
-              c('span', {}, data.comments),
-              c('div', { class: 'thumbs' }, [
-                c('img', { src: thumbIcon })
-              ]),
-              c('span', {}, data.thumbs)
-            ])
-          ])
-        ])
-      ])
-    ])
-
-    return render(vdom)
-  }
-  // 图标触摸变色及点赞特效
-  animation() {
-    const $thumbs = document.getElementsByClassName('thumbs')
-    const $comments = document.getElementsByClassName('comments')
-    // 鼠标移入变色
-    for (let i = 0; i < $thumbs.length; i++) {
-      $thumbs[i].onmouseover = () => {
-        $thumbs[i].children[0].src = thumbActive
-      }
-      $thumbs[i].onmouseout = () => {
-        $thumbs[i].children[0].src = thumbIcon
-      }
-      $comments[i].onmouseover = () => {
-        $comments[i].children[0].src = commentsActive
-      }
-      $comments[i].onmouseout = () => {
-        $comments[i].children[0].src = commentsIcon
-      }
-    }
-  }
-}
-new List()
-
-
-// 右侧热门
-class RightNav {
-  constructor(method, url, data) {
-    this.run(method, url, data)
-  }
-  run(method, url, data) {
-    //axios
-    const $lists = document.getElementById('right-hot')
-    baseData.lists.forEach(list => {
-      if (list.img)
-        $lists.appendChild(this.create(list))
-    })
-  }
-  create(data) {
-    let Vdom = c('a', { class: 'list', href: 'javascript: (void 0)' }, [
-      c('div', { class: 'img' }, [
-        c('img', { src: data.img })
-      ]),
-      c('div', { class: 'contain' }, [
-        c('h1', { class: 'title' }, data.keyword),
-        c('div', { class: 'bottom-bar' }, [
-          c('span', {}, data.read),
-          c('span', {}, data.discuss)
-        ])
-      ])
-    ])
-    return render(Vdom)
-  }
-}
-new RightNav()
-

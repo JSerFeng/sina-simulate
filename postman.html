@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    h1 {
+      font-size: 25px;
+    }
+
+    input {
+      font-size: 20px;
+    }
+
+    #result {
+      background-color: rgb(197, 197, 197);
+      font-size: 30px;
+      padding: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>
+    输入url
+    <input type="text" id="url" value="http://192.168.43.56/sina/user/login">
+  </h1>
+  <h1>
+    请求参数
+    <input type="text" name="" id="param" value='{"telephone":"123","password":"123"}'>
+  </h1>
+  <button onclick="Req('get')" id="get">GET</button>
+  <button onclick="Req('post')" id="post">POST</button>
+  <div id="result">
+    结果：
+  </div>
+
+  <script>
+    const obj = `{
+      "user": "fy",
+      "psw": 123546
+    }`
+
+    function show(json) {
+      const $show = document.getElementById('result')
+      const div = document.createElement('div')
+      div.innerText = json
+      $show.appendChild(div)
+      console.log(div);
+    }
+
+    function Req(method) {
+      const url = document.getElementById("url").value
+      let data = document.getElementById("param").value
+      data = JSON.stringify(JSON.parse(data))
+      ajax('post', url, data)
+    }
+
+    function ajax(method, url, data) {
+      const xhr = new XMLHttpRequest()
+      xhr.open(method, url)
+      xhr.withCredentials = true
+      if (method === 'post') {
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
+        xhr.send(data)
+      } else {
+        xhr.send()
+      }
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && (xhr.status < 300 && xhr.status >= 200)) {
+          show(xhr.responseText)
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>

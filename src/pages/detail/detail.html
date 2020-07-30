@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div class="toast hide">
+    <div class="cover"></div>
+    <div class="show-toast">
+      <div class="title">
+        <label class="log" for="log">登陆</label>
+        <label class="reg" for="reg">注册</label>
+        <span class="cancel-log center">X</span>
+      </div>
+      <div class="form-content">
+        <div>
+          <div class="center">
+            <img src="../../imgs/phone.png" style="margin-left:100px">
+            <input type="text" placeholder="手机号" class="number input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+  
+          <div class="center">
+            <img src="../../imgs/password.png" style="margin-left:100px">
+            <input type="password" placeholder="密码" class="password input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+        </div>
+        <input type="radio" name="log" id="reg" class="hide">
+        <input type="radio" name="log" id="log" class="hide">
+        <div class="if-reg">
+          <div class="center">
+            <img src="../../imgs/password2.png" style="margin-left:100px">
+            <input type="password" class="password-comfirm input" placeholder="确认密码">
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+          <div class="center">
+            <img src="../../imgs/username.png" style="margin-left:100px">
+            <input type="text" placeholder="用户名" class="username input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+          <div class="center">
+            <img src="../../imgs/mail.png" style="margin-left:100px">
+            <input type="text" class="mail input" placeholder="输入邮箱">
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+        </div>
+        <button class="log-btn hide">登陆<img src="../../imgs/loading.gif" class="hide"></button>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <header id="top">
+      <!-- container属性是flex -->
+      <div class="container">
+        <a href="../index.html">
+          <img src="../../imgs/sina_logo.png" alt="sina_logo" id="tohome" />
+        </a>
+    
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="搜索">
+          <div class="search-bottom-bar"></div>
+          <div class="center search-icon-div">
+            <img src="../../imgs/search-icon.png?544" alt="search-icon" class="search-icon">
+          </div>
+          <div class="search-dragdown shadow hide">
+            <div style="color:#eb7350" class="li">查看完整热搜榜》</div>
+          </div>
+        </div>
+    
+        <nav class="log-reg center">
+          <label for="reg" class="register">注册</label>
+          <label for="log" class="login">登陆</label>
+        </nav>
+        <div class="show-info">
+          <img src="../../imgs/user.png">
+          <div class="user">
+          </div>
+          <nav class="exit">
+            注销
+          </nav>
+        </div>
+    
+      </div>
+    </header>
+
+    
+  </div>
+</body>
+</html>

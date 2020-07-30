@@ -1,139 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>主页</title>
 </head>
+
 <body>
-  <header>
-    <!-- container属性是flex -->
-    <div class="container"> 
-      <img src="../../imgs/sina_logo.png" alt="sina_logo" />
-
-      <div class="search-container">
-        <input type="text" class="search-input" placeholder="搜索">
-        <div class="search-bottom-bar"></div>
-        <div class="center search-icon-div">
-          <img src="../../imgs/search-icon.png?544" alt="search-icon" class="search-icon">
-        </div>
-        <div class="search-dragdown shadow hide">
-          <div style="color:#eb7350" class="li">查看完整热搜榜》</div>
-        </div>  
+  <div class="toast hide">
+    <div class="cover"></div>
+    <div class="show-toast">
+      <div class="title">
+        <label class="log" for="log">登陆</label>
+        <label class="reg" for="reg">注册</label>
+        <span class="cancel-log center">X</span>
       </div>
+      <div class="form-content">
+        <div>
+          <div class="center">
+            <img src="../../imgs/phone.png" style="margin-left:100px">
+            <input type="text" placeholder="手机号" class="number input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
 
-      <nav class="log-reg center">
-        <div class="register">注册</div>
-        <div class="login">登陆</div>
-      </nav>
+          <div class="center">
+            <img src="../../imgs/password.png" style="margin-left:100px">
+            <input type="password" placeholder="密码" class="password input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+        </div>
+        <input type="radio" name="log" id="reg" class="hide">
+        <input type="radio" name="log" id="log" class="hide">
+        <div class="if-reg">
+          <div class="center">
+            <img src="../../imgs/password2.png" style="margin-left:100px">
+            <input type="password" class="password-comfirm input" placeholder="确认密码">
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+          <div class="center">
+            <img src="../../imgs/username.png" style="margin-left:100px">
+            <input type="text" placeholder="用户名" class="username input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+          <div class="center">
+            <img src="../../imgs/mail.png" style="margin-left:100px">
+            <input type="text" class="mail input" placeholder="输入邮箱">
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+        </div>
+        <button class="log-btn hide">登陆<img src="../../imgs/loading.gif" class="hide"></button>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <div class="content">
-    <!-- 左导航 -->
-    <nav class="left-nav">
-      <ul class="left-ul shadow" style="margin 0;padding: 0">
-        <li class="nav-item"><a style="background-color: #eb7350;color:#fff">热门</a></li>
-        <li class="nav-item"><a>头条</a></li>
-        <li class="nav-item"><a>视频</a></li>
-        <li class="nav-item"><a>榜单</a></li>
-        <li class="nav-item"><a>社会</a></li>
-      </ul>
-    </nav>
+  <div class="main" id="#top">
 
-    <div class="home shadow">
 
-      <!-- 轮播图 -->
-      <div class="slides">
-        <div class="slide-bar">
-          <div class="slide">
-            <a class="img-container-left">
-              <img class="img0">
-              <div class="img-intro">
-                <h1 class="intro">#高考前一晚怎么过的#</h1>
-                <span class="discuss">讨论</span><span class="read">阅读</span>
-              </div>
-            </a>
-            <div class="img-container-right">
-              <a class="img-container-small">
-                <img class="img1">
-                <div class="img-intro">
-                  <h1 class="intro">#高考怎么过的#</h1>              
-                </div>
-              </a>
-              <a class="img-container-small">
-                <img class="img2">
-                <div class="img-intro">
-                  <h1 class="intro">#高考怎么过的#</h1>              
-                </div>
-              </a>
-            </div> 
+    <header>
+      <!-- container属性是flex -->
+      <div class="container">
+        <img src="../../imgs/sina_logo.png" alt="sina_logo" />
+
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="搜索">
+          <div class="search-bottom-bar"></div>
+          <div class="center search-icon-div">
+            <img src="../../imgs/search-icon.png?544" alt="search-icon" class="search-icon">
           </div>
-          <div class="slide">
-            <a class="img-container-left">
-              <img class="img0">
-              <div class="img-intro">
-                <h1 class="intro">#高考前一晚怎么过的#</h1>
-                <span class="discuss">讨论</span><span class="read">阅读</span>
-              </div>
-            </a>
-            <div class="img-container-right">
-              <a class="img-container-small">
-                <img class="img1">
-                <div class="img-intro">
-                  <h1 class="intro">#高考怎么过的#</h1>              
-                </div>
-              </a>
-              <a class="img-container-small">
-                <img class="img2">
-                <div class="img-intro">
-                  <h1 class="intro">#高考怎么过的#</h1>              
-                </div>
-              </a>
-            </div> 
-          </div>
-          <div class="slide">
-            <a class="img-container-left">
-              <img class="img0">
-              <div class="img-intro">
-                <h1 class="intro">#高考前一晚怎么过的#</h1>
-                <span class="discuss">讨论</span><span class="read">阅读</span>
-              </div>
-            </a>
-            <div class="img-container-right">
-              <a class="img-container-small">
-                <img class="img1">
-                <div class="img-intro">
-                  <h1 class="intro">#高考怎么过的#</h1>              
-                </div>
-              </a>
-              <a class="img-container-small">
-                <img class="img2">
-                <div class="img-intro">
-                  <h1 class="intro">#高考怎么过的#</h1>              
-                </div>
-              </a>
-            </div> 
+          <div class="search-dragdown shadow hide">
+            <div style="color:#eb7350" class="li">查看完整热搜榜》</div>
           </div>
         </div>
-        <div class="nav-dot center">
-          <div class="dot" style="background-color: #eb7350;"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
+
+        <nav class="log-reg center">
+          <label for="reg" class="register">注册</label>
+          <label for="log" class="login">登陆</label>
+        </nav>
+        <div class="show-info">
+          <img src="../../imgs/user.png">
+          <div class="user">
+          </div>
+          <nav class="exit">
+            注销
+          </nav>
         </div>
       </div>
-      <!-- 列表 -->
-      <div class="lists">
-        <div class="list-img list">
-          <div class="img">
-            <img src="https://wx2.sinaimg.cn/thumb180/a157f83bly1gghknzyjwrj20wy0u079p.jpg" alt="">
-          </div>
-          <a>
-            <div class="list-content-img">
-              <div class="list-title">
-                【冲吧少年！愿你们前途似锦，未来可期】2020年的高考，有不同也有相同。超额寒假、云端开学、高考延期....但不变的是乘风破浪，为梦想拼尽全力，一往无前！三年的奋斗，将成为人生中最宝贵的时光，每一刻都闪闪发光。转发加油，祝所有考生金榜题名！ 
+    </header>
+
+    <div class="content">
+      <div class="float-bar">
+        <a href="javascript:location.reload()">
+          <img src="../../imgs/refresh.png">
+        </a>
+        <a href="#top">
+          <img src="../../imgs/toTop.png">
+        </a>
+      </div>
+      <!-- 左导航 -->
+      <nav class="left-nav">
+        <ul class="left-ul" style="margin 0;padding: 0">
+          <li class="nav-item"><a style="background-color: #eb7350;color:#fff">热门</a></li>
+          <li class="nav-item"><a>头条</a></li>
+          <li class="nav-item"><a>视频</a></li>
+          <li class="nav-item"><a>榜单</a></li>
+          <li class="nav-item"><a>社会</a></li>
+        </ul>
+      </nav>
+
+      <div class="home">
+
+        <!-- 轮播图 -->
+        <div class="slides">
+          <div class="slide-bar">
+            <div class="slide">
+              <a class="img-container-left">
+                <img class="img0">
+                <div class="img-intro">
+                  <h1 class="intro">#高考前一晚怎么过的#</h1>
+                  <span class="discuss">讨论</span><span class="read">阅读</span>
+                </div>
+              </a>
+              <div class="img-container-right">
+                <a class="img-container-small">
+                  <img class="img1">
+                  <div class="img-intro">
+                    <h1 class="intro">#高考怎么过的#</h1>
+                  </div>
+                </a>
+                <a class="img-container-small">
+                  <img class="img2">
+                  <div class="img-intro">
+                    <h1 class="intro">#高考怎么过的#</h1>
+                  </div>
+                </a>
               </div>
-              <div class="foot-bar">
+            </div>
+            <div class="slide">
+              <a class="img-container-left">
+                <img class="img0">
+                <div class="img-intro">
+                  <h1 class="intro">#高考前一晚怎么过的#</h1>
+                  <span class="discuss">讨论</span><span class="read">阅读</span>
+                </div>
+              </a>
+              <div class="img-container-right">
+                <a class="img-container-small">
+                  <img class="img1">
+                  <div class="img-intro">
+                    <h1 class="intro">#高考怎么过的#</h1>
+                  </div>
+                </a>
+                <a class="img-container-small">
+                  <img class="img2">
+                  <div class="img-intro">
+                    <h1 class="intro">#高考怎么过的#</h1>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="slide">
+              <a class="img-container-left">
+                <img class="img0">
+                <div class="img-intro">
+                  <h1 class="intro">#高考前一晚怎么过的#</h1>
+                  <span class="discuss">讨论</span><span class="read">阅读</span>
+                </div>
+              </a>
+              <div class="img-container-right">
+                <a class="img-container-small">
+                  <img class="img1">
+                  <div class="img-intro">
+                    <h1 class="intro">#高考怎么过的#</h1>
+                  </div>
+                </a>
+                <a class="img-container-small">
+                  <img class="img2">
+                  <div class="img-intro">
+                    <h1 class="intro">#高考怎么过的#</h1>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="nav-dot center">
+            <div class="dot" style="background-color: #eb7350;"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <!-- 列表 -->
+        <div class="lists">
+          <!-- js会渲染这部分 -->
+          <!-- <div class="list-img list">
+            <div class="img">
+              <img src="https://wx2.sinaimg.cn/thumb180/a157f83bly1gghknzyjwrj20wy0u079p.jpg" alt="">
+            </div>
+            <a>
+              <div class="list-content-img">
+                <div class="list-title">
+                  <span class="keyword">【冲吧少年！愿你们前途似锦，未来可期】2020年的高考</span>，有不同也有相同。超额寒假、云端开学、高考延期....但不变的是乘风破浪，为梦想拼尽全力，一往无前！三年的奋斗，将成为人生中最宝贵的时光，每一刻都闪闪发光。转发加油，祝所有考生金榜题名！ 
+                </div>
+                <div class="foot-bar">
+                  <div class="sub-info">
+                    <img class="avatar" src="https://tvax3.sinaimg.cn/crop.0.0.1080.1080.50/a1c3de7ely8gghqe2ar6ej20u00u0q6c.jpg?KID=imgbed,tva&Expires=1594121130&ssig=RFDAk5JN%2Fo"></img>
+                    <span>username</span>
+                    <span>2020-7-5 03:22</span>
+                  </div>
+                  <div class="bottom">
+                    <div class="comments">
+                      <img src="../../imgs/comments.png" alt="评论" class="comments">
+                    </div>
+                    <span>351616</span>
+                    <div class="thumbs">
+                      <img src="../../imgs/thumb.png" alt="点赞" class="thumb">
+                    </div>
+                    <span>351616</span>
+                  </div>
+                </div>
+                
+              </div>
+            </a>
+          </div>
+          
+          <div class="list">
+            <div class="video">
+              <video controls src="https://f.video.weibocdn.com/001SjCo2gx07ECZoZiVO01041200X0LA0E010.mp4?label=mp4_hd&template=852x480.25.0&trans_finger=1621fcd5d40969f1c74e6b06e52fcd54&ori=0&ps=1EO8O2oFB1ePdo&Expires=1594111510&ssig=tuaP3QlGC4&KID=unistore,video"></video>
+            </div>
+            <a>
+              <div class="list-content-video">
+                <div class="list-title">
+                  <span class="keyword">【冲吧少年！愿你们前途似锦，未来可期】2020年的高考</span>，有不同也有相同。超额寒假、云端开学、高考延期....但不变的是乘风破浪，为梦想拼尽全力，一往无前！三年的奋斗，将成为人生中最宝贵的时光，每一刻都闪闪发光。转发加油，祝所有考生金榜题名！ 
+                </div>
                 <div class="sub-info">
                   <img class="avatar" src="https://tvax3.sinaimg.cn/crop.0.0.1080.1080.50/a1c3de7ely8gghqe2ar6ej20u00u0q6c.jpg?KID=imgbed,tva&Expires=1594121130&ssig=RFDAk5JN%2Fo"></img>
                   <span>username</span>
@@ -150,43 +253,54 @@
                   <span>351616</span>
                 </div>
               </div>
-              
-            </div>
-          </a>
+            </a>
+          </div> -->
         </div>
-        
-        <div class="list">
-          <div class="video">
-            <video controls src="https://f.video.weibocdn.com/001SjCo2gx07ECZoZiVO01041200X0LA0E010.mp4?label=mp4_hd&template=852x480.25.0&trans_finger=1621fcd5d40969f1c74e6b06e52fcd54&ori=0&ps=1EO8O2oFB1ePdo&Expires=1594111510&ssig=tuaP3QlGC4&KID=unistore,video"></video>
-          </div>
-          <a>
-            <div class="list-content-video">
-              <div class="list-title">
-                【冲吧少年！愿你们前途似锦，未来可期】2020年的高考，有不同也有相同。超额寒假、云端开学、高考延期....但不变的是乘风破浪，为梦想拼尽全力，一往无前！三年的奋斗，将成为人生中最宝贵的时光，每一刻都闪闪发光。转发加油，祝所有考生金榜题名！ 
-              </div>
-              <div class="sub-info">
-                <img class="avatar" src="https://tvax3.sinaimg.cn/crop.0.0.1080.1080.50/a1c3de7ely8gghqe2ar6ej20u00u0q6c.jpg?KID=imgbed,tva&Expires=1594121130&ssig=RFDAk5JN%2Fo"></img>
-                <span>username</span>
-                <span>2020-7-5 03:22</span>
-              </div>
-              <div class="bottom">
-                <div class="comments">
-                  <img src="../../imgs/comments.png" alt="评论" class="comments">
-                </div>
-                <span>351616</span>
-                <div class="thumbs">
-                  <img src="../../imgs/thumb.png" alt="点赞" class="thumb">
-                </div>
-                <span>351616</span>
-              </div>
+
+      </div>
+
+      <div class="right-nav">
+        <div class="log-reg center">
+          <form class="log2">
+            <h4 class="title">登&nbsp;&nbsp;陆</h4>
+            <div>
+              <img src="../../imgs/phone_user.png">
+              <input type="text" placeholder="手机号" required>
             </div>
-          </a>
+            <div>
+              <img src="../../imgs/password_home.png">
+              <input type="password" placeholder="密码" required>
+            </div>
+            <input type="submit" class="log2" value="登陆">
+            <span>还没有微博?<span id="show-toast" style="color: #eb7350;cursor: pointer">立即注册！</span></span>
+          </form>
+        </div>
+
+        <div class="hot">
+          <h1>微信热门话题</h1>
+          <div class="lists" id="right-hot">
+
+            <a href="javascript: (void 0)" class="list">
+              <div class="img">
+                <img src="https://wx2.sinaimg.cn/large/9e5389bbly1ggntts8sevj20dw0dwmyw.jpg" />
+              </div>
+
+              <div class="contain">
+                <h1 class="title">#唐山5.1地震#</h1>
+                <div class="bottom-bar">
+                  <span>4.5亿阅读</span>
+                  <span>9.8万讨论</span>
+                </div>
+              </div>
+            </a>
+
+          </div>
         </div>
       </div>
-      
-    </div>
-    <div style="width: 340px;"></div>
 
+    </div>
   </div>
+
 </body>
+
 </html>

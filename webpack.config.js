@@ -3,23 +3,35 @@ const {resolve} = require('path'),
 module.exports={
   mode: 'development',
   entry: {
-    login: './src/pages/login/index.js',
-    main: './src/pages/main/index.js'
+    detail: './src/pages/detail/detail.js',
+    search: './src/pages/search/search.js',
+    main: './src/pages/main/index.js',
+    user: './src/pages/user/user.js'
   },
   output: {
-    filename: 'js/[name].js',
+    filename: 'static/js/[name].js',
     path: resolve(__dirname,'build')
   },
   plugins: [
     new HtmlWebpackPlugin({
-      filename: 'login/login.html',
-      template: './src/pages/login/login.html',
-      chunks: ['login']
+      filename: 'static/search.html',
+      template: './src/pages/search/search.html',
+      chunks: ['search']
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/pages/main/main.html',
       chunks: ['main']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'static/detail.html',
+      template: './src/pages/detail/detail.html',
+      chunks: ['detail']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'static/user.html',
+      template: './src/pages/user/user.html',
+      chunks: ['user']
     })
   ],
   devServer: {
@@ -45,5 +57,6 @@ module.exports={
         loader: 'file-loader'
       }
     ]
-  }
+  },
+  devtool: 'cheap-module-eval-source-map'
 }

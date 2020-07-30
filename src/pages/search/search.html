@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索</title>
+</head>
+
+<body>
+
+
+  <div class="toast hide">
+    <div class="cover"></div>
+    <div class="show-toast">
+      <div class="title">
+        <label class="log" for="log">登陆</label>
+        <label class="reg" for="reg">注册</label>
+        <span class="cancel-log center">X</span>
+      </div>
+      <div class="form-content">
+        <div>
+          <div class="center">
+            <img src="../../imgs/phone.png" style="margin-left:100px">
+            <input type="text" placeholder="手机号" class="number input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+
+          <div class="center">
+            <img src="../../imgs/password.png" style="margin-left:100px">
+            <input type="password" placeholder="密码" class="password input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+        </div>
+        <input type="radio" name="log" id="reg" class="hide">
+        <input type="radio" name="log" id="log" class="hide">
+        <div class="if-reg">
+          <div class="center">
+            <img src="../../imgs/password2.png" style="margin-left:100px">
+            <input type="password" class="password-comfirm input" placeholder="确认密码">
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+          <div class="center">
+            <img src="../../imgs/username.png" style="margin-left:100px">
+            <input type="text" placeholder="用户名" class="username input" />
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+          <div class="center">
+            <img src="../../imgs/mail.png" style="margin-left:100px">
+            <input type="text" class="mail input" placeholder="输入邮箱">
+            <img class="state-img">
+            <span>请输入</span>
+          </div>
+        </div>
+        <button class="log-btn hide">登陆<img src="../../imgs/loading.gif" class="hide"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main" id="main">
+
+    <div class="float center">
+      <a href="#main">
+        <img src="../../imgs/toTop.png">
+      </a>
+    </div>
+
+    <header class="shadow" id="top">
+      <!-- container属性是flex -->
+      <div class="container">
+        <a href="../index.html">
+          <img src="../../imgs/sina_logo.png" alt="sina_logo" id="tohome" />
+        </a>
+
+        <div class="search-container">
+          <input type="text" class="search-input" placeholder="搜索">
+          <div class="search-bottom-bar"></div>
+          <div class="center search-icon-div">
+            <img src="../../imgs/search-icon.png?544" alt="search-icon" class="search-icon">
+          </div>
+          <div class="search-dragdown shadow hide">
+            <div style="color:#eb7350" class="li">查看完整热搜榜》</div>
+          </div>
+        </div>
+
+        <nav class="log-reg center">
+          <label for="reg" class="register">注册</label>
+          <label for="log" class="login">登陆</label>
+        </nav>
+        <div class="show-info">
+          <img src="../../imgs/user.png">
+          <div class="user">
+          </div>
+          <nav class="exit">
+            注销
+          </nav>
+        </div>
+
+      </div>
+    </header>
+
+    <div class="main2">
+
+      <nav class="top-bar">
+        <div class="ul">
+          <div class="li active">综合</div>
+          <div class="li">找人</div>
+          <div class="li">文章</div>
+          <div class="li">视频</div>
+          <div class="li">图片</div>
+          <div class="li">话题</div>
+        </div>
+      </nav>
+
+      <div class="wrap">
+        <div class="con-l">
+          <!-- js中的contentList类会渲染这个列表 -->
+          <!-- <div class="card">
+
+          <img
+            src="https://tvax1.sinaimg.cn/crop.0.0.1080.1080.50/61e6c012ly8gdirtyou0ij20u00u0gn8.jpg?KID=imgbed,tva&Expires=1594551633&ssig=kvvrz2Z3kw"
+            class="avatar">
+          <div class="content">
+            <h1 class="title">中国新闻周刊</h1>
+            <p class="txt">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique harum cum tenetur
+              architecto quibusdam tempora assumenda libero sapiente sit quis dolorem optio quas quos esse quo, rem
+              possimus magni odit!</p>
+            <img src="//ww3.sinaimg.cn/orj360/67be458fgy1gglvovgistj208c0b4t9w.jpg" class="pic">
+            <div class="time">07月20日 14:51</div>
+          </div>
+          <div class="foot-bar">
+            <div class="item center">收藏</div>
+            <div class="item center">转发</div>
+            <div class="item center open-fold">评论0</div>
+            <div class="item center"><img src="../../imgs/thumb.png" class="like">1115151</div>
+          </div>
+        </div>
+        <div class="comment hide">
+          <div class="sub">
+            <img src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD" class="avatar">
+            <div class="comment-r">
+              <input type="textarea">
+              <input type="submit" value="评论">
+              <img class="emoji" src="../../imgs/emoji.png">
+            </div>
+          </div>
+
+          <div class="lists">
+            <div class="list">
+              <img
+                src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD"
+                class="avatar">
+              <div class="content">
+                <p class="detail"><span class="reply-name">ly456454</span> ipsum dolor sit, amet consectetur adipisicing elit. Corrupti
+                  facere, repellendus laboriosam, harum voluptates incidunt deserunt iure reprehenderit ullam dicta, dignissimos
+                  labore cumque odit! Atque accusamus hic tenetur cupiditate quia!</p>
+                <div class="foot-bar">
+                  <div class="time">07-12 22:10</div>
+                  <div>
+                    <img src="../../imgs/thumb.png" class="thumb">
+                    <span>123</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        </div>
+
+        <div class="con-r">
+          <div class="hot">
+            <div class="title">热搜榜</div>
+            <div class="content">
+              <ul class="rank">
+                <li>
+                  <span>1</span>
+                  <a href="#">
+                    123
+                    <div class="hot-tag">热</div>
+                  </a>
+                  <span>5151</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>
