@@ -1,28 +1,22 @@
-// css
-import './user.css'
-// 引入工具
-import axios from '../../utils/axios'
-import Mock from 'mockjs'
-import { createElement, render } from '../../utils/vdom2dom'
+import './follows.css'
+//引入工具
+import axios, { get } from '../../utils/axios'
+import { Random } from 'mockjs'
 import { reactive, effect } from '../../utils/reactive'
 import { show } from '../../utils/showToast'
-
-// 引入图标地址
+import { scrollEvent } from '../../utils/scroll'
+// 引入图标
 import commentsIcon from '../../imgs/comments.png'
-import commentsActive from '../../imgs/comments-active.png'
 import thumbIcon from '../../imgs/thumb.png'
-import thumbActive from '../../imgs/thumb-active.png'
 import searchIcon from '../../imgs/search-icon.png'
 import searchIconActive from '../../imgs/search-icon1.png'
 import successImg from '../../imgs/success.png'
 import loading from '../../imgs/loading.gif'
 import err from '../../imgs/err.png'
 import emoji from '../../imgs/emoji.png'
-
-const Random = Mock.Random
-const c = createElement
-
-// 模拟请求到的数据
+import keep from '../../imgs/keep.png'
+import shareIcon from '../../imgs/share.png'
+// axios().then()
 const baseData = {
   // 输入搜索框时
   searching: [{
@@ -199,12 +193,12 @@ const baseData = {
     read: Random.integer(0, 99999)
   }]
 }
-// 搜索框输入时展示热度排行（加防抖）
+
+// 输入框
 class Searching {
   constructor(method, url) {
     this.$search = document.querySelector('.search-input')
     this.$show = document.querySelector('.search-dragdown')
-    this.focus = false
     this.mehod = method,
       this.url = url,
       this.onTyping()
@@ -226,8 +220,7 @@ class Searching {
         for (let i = 0; i < randNum; i++) {
           baseData.searching[i] = {
             val: Random.ctitle(Math.floor(Math.random() * 15)),
-            isHot: Math.floor(Math.random() * 2),
-            aid: Random.integer(0, 999)
+            isHot: Math.floor(Math.random() * 2)
           }
         }
         this.refresh(baseData.searching)
@@ -252,7 +245,6 @@ class Searching {
             aid: Random.integer(0, 999)
           }
         }
-
         this.refresh(baseData.searching)
       })
     this.$show.onmouseover = () => { this.focus = true }
@@ -278,13 +270,51 @@ class Searching {
         div.appendChild(hotTag)
       }
       div.classList.add('li')
-      div.onclick = () => {
-        window.open(`./search.html?${data.isHot}`, '_self')
-      }
       this.$show.appendChild(div)
     })
   }
   btnEvent() {
+    let userInfo
+    const $log = document.getElementsByClassName('log-reg')[0]
+    const $login = document.getElementsByClassName('log-reg')[0]
+    const $user = document.getElementsByClassName('show-info')[0]
+    const $username = $user.getElementsByClassName('user')[0]
+    const $exit = document.getElementsByClassName('exit')[0]
+    if (sessionStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      $username.innerText = userInfo.username
+
+      $user.onclick = () => {
+        console.log('user点击');
+        window.open('./user.html')
+      }
+      $log.classList.add('hide')
+      $login.classList.add('hide')
+
+      $user.classList.remove('hide')
+
+      $exit.onclick = onClick
+      function onClick(e) {
+        e.stopPropagation()
+        $exit.onclick = null
+        console.log('exit点击');
+        axios.post('/user/exit', {}).then(
+          value => {
+            sessionStorage.removeItem('userInfo')
+            window.open('./search.html', '_self')
+          },
+          err => {
+            show('注销失败', 'fail')
+          }
+        ).finally(() => {
+          $exit.onclick = onClick
+        })
+      }
+    } else {
+      $user.classList.add('hide')
+      $log.classList.remove('hide')
+    }
+
     // 鼠标移入搜索图标变色
     const $search = document.getElementsByClassName('search-icon')[0]
     $search.onmouseover = () => {
@@ -296,18 +326,12 @@ class Searching {
     // 点击搜索
     $search.onclick = () => {
       // axios
-      window.open(`./search.html?aword=${this.$search.value}`, '_self')
-    }
-
-    const $exit = document.getElementsByClassName('exit')[0]
-    $exit.onclick = () => {
-      axios.post('/user/exit', {}).then(
+      axios.get(`/article/pageQuery`, { aword: this.$search.value }).then(
         res => {
-          sessionStorage.removeItem('userInfo')
-          window.open('../index.html', '_self')
+          window.open(`./search.html?aword=${this.$search.value}`)
         },
         err => {
-          show('注销失败', 'fail')
+          show('搜索失败了 ' + err, 'fail')
         }
       )
     }
@@ -316,250 +340,233 @@ class Searching {
 new Searching()
 
 
-// 获取用户数据
-class Init {
-  constructor() {
-    this.init()
+// Login
+class Login$Register {
+  constructor(method, url, data = {}) {
+    this.mehod = method
+    this.url = url
+    this.data = data
+    this.run()
   }
-  init() {
-    const $user = document.getElementsByClassName('user')[0]
-    const $avatar = document.getElementsByClassName('avatar')[0]
-    const $name = document.getElementById('user-name')
-    const $intro = document.getElementsByClassName('intro')[0]
-    const $edit = document.getElementsByClassName('edit')[0]
-
-    let userInfo
-    if (userInfo = JSON.parse(sessionStorage.getItem('userInfo'))) {
-      $user.innerText = `${userInfo.username}`
-      $avatar.src = userInfo.uimage
-      $name.innerText = userInfo.username
-      $intro.innerText = userInfo.introduce
-      $edit.isOpen = false
-      $edit.onclick = editIntro
-      // 隐藏输入框
-      function close() {
-        $intro.classList.remove('hide')
-        const $inputs = $edit.parentNode.getElementsByTagName('input');
-        Array.prototype.forEach.call($inputs, input => input.classList.add('hide'))
-      }
-      // 修改简介
-      function editIntro(e) {
-        if ($edit.isOpen) {
-          $edit.isOpen = false
-          close()
-        } else {
-          $edit.isOpen = true
-          $intro.classList.add('hide')
-
-          const $input = $edit.parentNode.getElementsByTagName('input')[0]
-          const $btn = $edit.parentNode.getElementsByTagName('input')[1]
-          
-          console.log($input,$btn);
-
-          $input.classList.remove('hide')
-          $btn.classList.remove('hide')
-
-          $btn.onclick = subIntro
-          function subIntro() {
-            $btn.onclick = null
-            axios.post('/user/setIntroduce', { introduce: $input.value }).then(
-              res => {
-                $intro.innerText = $input.value
-                const user = JSON.parse(sessionStorage.getItem('userInfo'))
-                user.introduce = $input.value
-                sessionStorage.setItem('userInfo', JSON.stringify(user))
-                close()
-                show(res.errorMsg)
-              },
-              err => show(err, 'fail')
-            ).finally(() => {
-              $btn.onclick = subIntro
-            })
-          }
-        }
-      }
-    } else {
-      window.open('../index.html', '_self')
+  // 移入移出变色，点击弹出登录窗口
+  run() {
+    const that = this
+    const $login = document.querySelector('.login')
+    const $register = document.querySelector('.register')
+    // 移入变色
+    $register.onmouseover = $login.onmouseover = function () {
+      this.style.color = '#eb7350'
+    }
+    $login.onmouseout = $register.onmouseout = function () {
+      this.style.color = '#6e6e6e'
+    }
+    // 点击事件
+    $login.onclick = $register.onclick = function () {
+      that.showToast(this.className)
     }
 
-    // 关注数量
-    const $foc = document.getElementsByClassName('_li')[0].getElementsByTagName('h1')[0]
-    const $bef = document.getElementsByClassName('_li')[1].getElementsByTagName('h1')[0]
-
-    $foc.innerText = JSON.parse(sessionStorage.getItem(userInfo)).focus.focusNub
-    $bef.innerText = JSON.parse(sessionStorage.getItem(userInfo)).focus.befocusNub
   }
-}
-new Init()
+  // 登陆注册弹出面板的字体切换大小，按钮内容切换，注册登陆切换，取消注册面板
+  showToast(type) {
+    const $toast = document.getElementsByClassName('toast')[0]
+    const $log = document.getElementsByClassName('log')[0]
+    const $reg = document.getElementsByClassName('reg')[0]
+    const $main = document.getElementsByClassName('main')[0]
+    const $mask = document.getElementsByClassName('cover')[0]
+    const $cancelBtn = document.getElementsByClassName('cancel-log')[0]
+    const $btn = document.getElementsByClassName('log-btn')[0]
 
-// 微博页面
-class ContentList {
-  constructor() {
-    this.getData()
-  }
-  fresh(data = []) {
-    // 创建列表的每一个微博
-    const $con = document.getElementsByClassName('con-l')[0]
-    data.forEach(list => {
-      let div = document.createElement('div')
-      div.className = 'card'
-      let dom = `<img src=${list.avatar} class="avatar">
-          <div class="content">
-            <h1 class="title">${list.authorName}</h1>
-            <p class="txt">${list.content}</p>
-            <img src=${list.imgs} class="pic">
-            <div class="time">${list.time}</div>
-          </div>
-          <div class="foot-bar">
-            <div class="item center">收藏</div>
-            <div class="item center">转发</div>
-            <div class="item center open-fold">评论${list.comments}</div>
-            <div class="item center"><img src=${thumbIcon} class="like">${list.like}</div>
-          </div>`
-      div.innerHTML = dom
-      let commentDiv = document.createElement('div')
-      commentDiv.className = 'comment hide'
-      commentDiv.innerHTML = `<div class="sub">
-            <img src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD" class="avatar">
-            <div class="comment-r">
-              <input type="textarea" class="textarea">
-              <input type="submit" value="评论" class="_submit">
-              <img class="emoji" src=${emoji}>
-            </div>
-          </div>`
-      let lists = document.createElement('div')
-      lists.className = 'lists'
-      list.commentsLists.forEach(comment => {
-        let list = document.createElement('div')
-        list.className = 'list'
-        let dom = `<img src=${comment.avatar} class="avatar">
-              <div class="content">
-                <p class="detail"><span class="reply-name">${comment.username}</span>${comment.content}</p>
-                <div class="foot-bar">
-                  <div class="time">${comment.time}</div>
-                  <div>
-                    <img src=${thumbIcon} class="thumb">
-                    <span>${comment.like}</span>
-                  </div>
-                </div>
-              </div>`
-        list.innerHTML = dom
-        lists.appendChild(list)
-      })
-      commentDiv.appendChild(lists)
-      const divContainer = document.createElement('div')
-      divContainer.setAttribute('style', 'margin:0 0 15px')
-      divContainer.appendChild(div)
-      divContainer.appendChild(commentDiv)
-      $con.appendChild(divContainer)
+    $mask.classList.remove('hide')
+    // 初始化益处登陆或者注册字体变大
+    $reg.classList.remove('active')
+    $log.classList.remove('active')
+
+    $main.classList.add('blur')
+    $toast.classList.remove('hide')
+    let observed = reactive({
+      type: type
+    })
+    effect(() => {
+      $btn.innerHTML = observed.type == 'login' ? '登陆' : '注册'
+      if (observed.type == 'login') {
+        $log.classList.add('active')
+        $reg.classList.remove('active')
+      } else {
+        $reg.classList.add('active')
+        $log.classList.remove('active')
+      }
     })
 
-    this.addEvents()
-  }
-  addEvents() {
-    // 给评论添加点击事件控制评论的显示隐藏
-    const $opens = document.getElementsByClassName('open-fold')
-    const $comments = document.getElementsByClassName('comment')
-    let isOpen = Array($opens.length).fill(0) //表示是否打开
-    for (let i = 0; i < $opens.length; i++) {
-      $opens[i].onclick = function () {
-        if (isOpen[i]) $comments[i].classList.add('hide')
-        else $comments[i].classList.remove('hide')
-        isOpen[i] = !isOpen[i]
-      }
+    $log.onclick = $reg.onclick = function () {
+      observed.type = this.className.indexOf('log') == -1 ? 'register' : 'login'
     }
-    // 给评论提交添加事件, 给提交按钮添加提交事件
-    const $textareas = document.getElementsByClassName('textarea')
-    const $submits = document.getElementsByClassName('_submit')
-    let value = ''
-    for (let i = 0; i < $textareas.length; i++) {
-      $textareas[i].onkeyup = function ({ target }) {
-        value = target.value
-      }
-      /**
-       * 添加评论
-       */
-      $submits[i].onclick = submit
+    $mask.onclick = $cancelBtn.onclick = () => {
+      $toast.classList.add('hide')
+      $mask.classList.add('hide')
+      $main.classList.remove('blur')
+    }
+    this.typing()
+  }
+  // 输入时的提示信息警告信息等，登陆注册按钮的隐藏显示和点击
+  typing() {
+    let timer = []
+    const $toast = document.getElementsByClassName('form-content')[0]
+    const spans = $toast.getElementsByTagName('span')
+    const imgs = document.getElementsByClassName('state-img')
+    const $inputs = $toast.getElementsByClassName('input')
+    const $btn = document.getElementsByClassName('log-btn')[0]
 
-      function submit({ target }) {
-        $submits[i].onclick = null
-        $submits[i].classList.add('ban')
-        // 请求数据成功后
-        axios('post', 'comment', {
-          value
+    // 获取提示状态的图片
+    let errMsg = ''
+    // 每个输入框是否输入完成，
+    const isFinish = reactive({
+      value: Array(5).fill(0)
+    })
+    // 时刻检测按钮的隐藏和显示
+    effect(() => {
+      if ((isFinish.value.indexOf(0) == -1) || ($btn.innerHTML == '登陆' && isFinish.value[0] == 1 && isFinish.value[1] == 1))
+        $btn.classList.remove('hide')
+      else
+        $btn.classList.add('hide')
+    })
+
+    Array.prototype.forEach.call($inputs, (input, i) => {
+      input.addEventListener('keyup', e => {
+        imgs[i].src = loading
+        clearTimeout(timer[i])
+        timer[i] = setTimeout(() => {
+          errMsg = this.check(i, e.target.value)
+          if (errMsg) {
+            imgs[i].src = err
+            isFinish.value[i] = 0
+          } else {
+            imgs[i].src = successImg
+            isFinish.value[i] = 1
+          }
+          spans[i].innerHTML = errMsg
+        }, 300)
+      })
+    })
+
+    $btn.onclick = () => {
+      let phone = $inputs[0].value
+      let password = $inputs[1].value
+      let username = $inputs[3].value
+      let mail = $inputs[4].value
+
+      const img = document.createElement('img')
+      img.src = loading
+      if ($btn.innerHTML === '登陆') {
+        // axios this.method...
+        axios.post('/user/login', {
+          telephone: phone,
+          password
         }).then(
           res => {
-            //...
-            $lists.appendChild(div)
-            $submits[i].onclick = null
-            $submits.value = '...'
+            if (!res.flag) {
+              return Promise.reject(res.errorMsg)
+            } else {
+              show('登陆成功！')
+              return axios.post('/user/findLoginUser', {})
+            }
+          }, err => {
+            return Promise.reject(err)
+          }
+        ).then(
+          res => {
+            if (res) {
+              sessionStorage.setItem('userInfo', JSON.stringify(res))
+              window.open('./user.html', '_self')
+            }
           },
           err => {
-            alert(err)
-            $submits[i].onclick = submit
-            $submits[i].classList.remove('ban')
+            show('登陆失败 ' + err, 'fail')
+          }
+        ).finally(
+          () => {
+            $btn.removeChild(img)
+            $btn.onclick = clickEvent
           }
         )
-        let time = new Date().toLocaleString()
-        let name = sessionStorage.getItem('userinfo')
-        let $lists = target.parentNode.parentNode.parentNode.getElementsByClassName('lists')[0]
-        let dom = `<img src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD" class="avatar">
-              <div class="content">
-                <p class="detail"><span class=${name}>ly456454</span>${value}</p>
-                <div class="foot-bar">
-                  <div class="time">${time}</div>
-                  <div>
-                    <img src=${thumbIcon} class="thumb">
-                    <span>0</span>
-                  </div>
-                </div>
-              </div>`
-        const div = document.createElement('div')
-        div.className = 'list'
-        div.innerHTML = dom
-        // $lists.appendChild(div) //请求成功后执行promise中的这个语句，写在这里作提醒
+      } else {
+        // axios this.method...
+        axios.post('/user/register', {
+          telephone: phone,
+          password,
+          username,
+          email: mail
+        }).then(res => {
+          show('注册成功， 请登陆')
+          $btn.removeChild(img)
+        }, err => {
+          show('注册失败，请检查网络\n' + err, 'fail');
+          $btn.removeChild(img)
+        })
       }
+      $btn.appendChild(img)
     }
   }
-  getData() {
-    // axios.get('/comments').then(res => {
-    //   this.fresh(res)
-    // })
-    this.fresh(baseData.contentList)
+  // 输入form表单的检测
+  check(type, value) {
+    let errMsg = ''
+    switch (type) {
+      // 手机号
+      case 0:
+        {
+          const reg = /^1[3456789]\d{9}$/
+          const result = reg.test(value)
+          if (!result) {
+            if (/^[\u0391-\uFFE5]+$/.test(value))
+              errMsg = '不懂什么是手机号?'
+            else if (/^[a-zA-Z_]+$/.test(value))
+              errMsg = '你家手机号英文呐？'
+            else if (value.length != 11)
+              errMsg = '手机号长度错误'
+            else
+              errMsg = '输入有误'
+          }
+          break;
+        }
+      // 密码
+      case 1:
+        {
+          if (value == '')
+            errMsg = '输入为空'
+          break;
+        }
+      // 确认密码
+      case 2:
+        {
+          const password = document.getElementsByClassName('password')[0].value
+          if (value.length == 0)
+            errMsg = '输入为空'
+          if (value != password)
+            errMsg = '两次密码不一样'
+          break;
+        }
+      // 用户名
+      case 3:
+        {
+          if (value.length == 0)
+            errMsg = '输入为空'
+          break;
+        }
+      // 邮箱
+      case 4:
+        {
+          const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+          const result = reg.test(value)
+          if (!result)
+            errMsg = '输入有误'
+          break;
+        }
+      default:
+        {
+          throw new Error('输入类型错误');
+        }
+    }
+    return errMsg
   }
 }
-new ContentList()
+new Login$Register('')
 
-//热门排行
-class HotRank {
-  constructor(method, url) {
-    this.getData(method, url)
-  }
-  init(data = []) {
-    const $ul = document.getElementsByClassName('rank')[0]
-    data.forEach((li, i) => {
-      let $li = document.createElement('li')
-      $li.innerHTML = `<span>${i + 1}</span>
-                  <a href="#">
-                    ${li.content}
-                    <div class="hot-tag">热</div>
-                  </a>
-                  <span>${li.read}</span>`
-      if (!li.isHot)
-        $li.getElementsByClassName('hot-tag')[0].classList.add('hide')
-      $ul.appendChild($li)
-    })
-  }
-  getData(method, url) {
-    // axios(method, url).then(
-    //   res => {
-    //     this.init(res)
-    //   },
-    //   err => {
-    //     console.log('请求热搜排行失败：'+err);
-    //   }
-    // )
-    this.init(baseData.hotRank)
-  }
-}
-new HotRank('get', '/rank')

@@ -7,6 +7,7 @@ import { reactive, effect } from '../../utils/reactive'
 import { show } from '../../utils/showToast'
 import { scrollEvent } from '../../utils/scroll'
 // 引入图标
+import anonymous from '../../imgs/anonymous.png'
 import commentsIcon from '../../imgs/comments.png'
 import thumbIcon from '../../imgs/thumb.png'
 import searchIcon from '../../imgs/search-icon.png'
@@ -292,8 +293,8 @@ class Searching {
     const $user = document.getElementsByClassName('show-info')[0]
     const $username = $user.getElementsByClassName('user')[0]
     const $exit = document.getElementsByClassName('exit')[0]
-    if (localStorage.getItem('userInfo')) {
-      userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (sessionStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
       $username.innerText = userInfo.username
 
       $user.onclick = () => {
@@ -312,7 +313,7 @@ class Searching {
         console.log('exit点击');
         axios.post('/user/exit', {}).then(
           value => {
-            localStorage.removeItem('userInfo')
+            sessionStorage.removeItem('userInfo')
             window.open('./search.html', '_self')
           },
           err => {
@@ -487,7 +488,7 @@ class Login$Register {
         ).then(
           res => {
             if (res) {
-              localStorage.setItem('userInfo', JSON.stringify(res))
+              sessionStorage.setItem('userInfo', JSON.stringify(res))
               window.open('./user.html', '_self')
             }
           },
@@ -600,40 +601,31 @@ class ContentList {
       let div = document.createElement('div')
       div.className = 'card'
       div.setAttribute('data-aid', list.aid)
-      let dom = `<img src=${list.user.uimage} class="avatar">
-          <div class="content atc" data-aid=${list.aid}>
-            <h1 class="title">${list.user.username}</h1>
-            <p class="txt">${list.aword}</p>
-            <img src=${list.aimage} class="pic">
-            <div class="time">${new Date(list.adate).toLocaleString()}</div>
+      let dom = `
+          <div class="content_wrap">
+            <img src=${list.user.uimage} class="avatar">
+            <div class="userBef" data-befid=${list.uid}>
+              <img src=${list.user.uimage} class="avatar_b">
+              <h1 class="username">${list.user.username}</h1>
+              <h4 class="introduce">${list.user.introduce}</h4>
+              <a class="focus"></a>
+            </div>
+            <div class="content atc" data-aid=${list.aid}>
+              <h1 class="title">${list.user.username}</h1>
+              <p class="txt">${list.aword}</p>
+              <img src=${list.aimage} class="pic">
+              <div class="time">${new Date(list.adate).toLocaleString()}</div>
+            </div>
           </div>
+          
           <div class="foot-bar">
-            <div class="item ${list.flag.isfavorite == true ? 'on' : ''} center fav" data-status=${list.flag.isfavorite == true ? 1 : 0} data-aid=${list.aid}><img src=${keep}>收藏</div>
+            <div class="item ${list.flag && list.flag.isfavorite == true ? 'on' : ''} center fav" data-status=${list.flag && list.flag.isfavorite == true ? 1 : 0} data-aid=${list.aid}><img src=${keep}>收藏</div>
             <div class="item center"><img src=${shareIcon}>转发</div>
             <div class="item center open-fold"><img src=${commentsIcon}>评论</div>
-            <div class="item center likes ${list.flag.islike == true ? 'on' : ''}" data-status=${list.flag.islike == true ? 1 : 0} data-aid=${list.aid}><img src=${thumbIcon} class="like }"><span class="likemount">${list.alikemount}</span></div>
+            <div class="item center likes ${list.flag && list.flag.islike == true ? 'on' : ''}" data-status=${list.flag && list.flag.islike == true ? 1 : 0} data-aid=${list.aid}><img src=${thumbIcon} class="like }"><span class="likemount">${list.alikemount}</span></div>
           </div>`
       div.innerHTML = dom
 
-      let lists = document.createElement('div')
-      // lists.className = 'lists'
-      // list.commentsLists.forEach(comment => {
-      //   let list = document.createElement('div')
-      //   list.className = 'list'
-      //   let dom = `<img src=${comment.avatar} class="avatar">
-      //         <div class="content">
-      //           <p class="detail"><span class="reply-name">${comment.username}</span>${comment.content}</p>
-      //           <div class="foot-bar">
-      //             <div class="time">${comment.time}</div>
-      //             <div>
-      //               <img src=${thumbIcon} class="thumb">
-      //               <span>${comment.like}</span>
-      //             </div>
-      //           </div>
-      //         </div>`
-      //   list.innerHTML = dom
-      //   lists.appendChild(list)
-      // })
       const contain = document.createElement('div')
       contain.setAttribute('style', 'margin-bottom:15px')
       contain.appendChild(div)
@@ -726,6 +718,7 @@ class ContentList {
             )
         }
       }
+      // 移入关注按钮
     }
 
     // 点击看详情
@@ -736,6 +729,15 @@ class ContentList {
       }
     })
     this.comment()
+
+
+    // 鼠标移入头像
+    const $befs = document.getElementsByClassName('userBef')
+    Array.prototype.forEach.call($befs, bef=>{
+      const uid = bef.getAttribute('data-befid')
+      const $focus = axios.get('addFocusUser',{ befid:uid})
+      
+    })
   }
   getData() {
     axios.get('/article/pageQuery', { cid: '', currentPage: '', aword: window.location.search.slice(7) }).then(res => {
@@ -749,7 +751,7 @@ class ContentList {
   comment() {
     // 点开评论
     const $opens = document.getElementsByClassName('open-fold')
-    
+
     Array.prototype.forEach.call($opens, open => {
       open.isOpen = false
       open.onclick = e => {
@@ -768,21 +770,21 @@ class ContentList {
               }
             )
           }
-          
+
           open.isOpen = true
-          
+
         }
       }
     })
   }
   initComment(res, aid) {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     const div = document.createElement('div')
     div.className = 'comment'
     div.innerHTML = `
         <div class="sub">
           <img
-            src=${userInfo.uimage}
+            src=${userInfo ? userInfo.uimage : anonymous}
             class="avatar">
           <div class="comment-r">
             <input type="textarea" >
@@ -795,7 +797,7 @@ class ContentList {
       </div>`
     const $lists = div.getElementsByClassName('lists')[0]
     this.appendComment($lists, res)
-  
+
     const $more = document.createElement('div')
     let currentPart = 1
     $more.className = 'more'
@@ -804,7 +806,7 @@ class ContentList {
     const self = this
     function getMore(e) {
       $more.onclick = null
-      axios.get('/article/commentQuery',{aid, currentPart: currentPart+1}).then(
+      axios.get('/article/commentQuery', { aid, currentPart: currentPart + 1 }).then(
         res => {
           if (res.list.length) {
             currentPart++
@@ -830,15 +832,15 @@ class ContentList {
     const $subBtn = div.getElementsByTagName('input')[1]
     $subBtn.onclick = e => {
       e.preventDefault()
-      console.log(aid);
-      axios.post('/article/addComment',{comments: $value.value, aid:aid}).then(
-        res => {
-          if ($lists.getElementsByClassName('list').length >= currentPart * 10) {
-            show('评论成功！')
-          } else {
-            const list = document.createElement('div')
-            list.className = 'list'
-            list.innerHTML = `<img
+      if ($value.value) {
+        axios.post('/article/addComment', { comments: $value.value, aid: aid }).then(
+          res => {
+            if ($lists.getElementsByClassName('list').length >= currentPart * 10) {
+              show('评论成功！')
+            } else {
+              const list = document.createElement('div')
+              list.className = 'list'
+              list.innerHTML = `<img
               src=${userInfo.uimage}
               class="avatar">
             <div class="content">
@@ -851,16 +853,17 @@ class ContentList {
                 </div>
               </div>
             </div>`
-            $lists.insertBefore(list, $lists.getElementsByClassName('more')[0])
-            show('评论成功！')
+              $lists.insertBefore(list, $lists.getElementsByClassName('more')[0])
+              show('评论成功！')
+            }
+          },
+          err => {
+            show('添加评论失败', 'fail')
           }
-          
-        },
-        err => {
-          show('添加评论失败','fail')
-        }
-      )
-      
+        )
+      } else {
+        show('请输入评论！')
+      }
     }
 
     return div
@@ -887,7 +890,6 @@ class ContentList {
   }
 }
 const contentList = new ContentList()
-
 
 
 

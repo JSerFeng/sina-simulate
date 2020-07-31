@@ -726,10 +726,16 @@ header .container .log-reg img {
   height: 100%;
 }
 
+a {
+  text-decoration: none;
+  color: #424242;
+}
+
 .right .user-info {
   width: 100%;
   background-color: #fff;
   margin: 0 0 10px;
+  overflow: hidden;
 }
 
 .right .user-info .bg img {
@@ -748,7 +754,7 @@ header .container .log-reg img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -60%);
   box-shadow: 0 0 15px #e0e0e0;
 }
 
@@ -756,9 +762,51 @@ header .container .log-reg img {
   position: relative;
   top: 30px;
   text-align: center;
-  font-size: 14px;
+  font-size: 18px;
   padding: 10px;
   margin: 0;
+}
+
+.right .user-info p {
+  position: relative;
+  top: 10px;
+  padding: 10px 20px;
+  color: #333333;
+  font-size: 14px;
+}
+
+.right .user-info .edit {
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  right: 5px;
+  width: 15px;
+  height: 15px;
+  background-image: url(../../imgs/edit.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.right .user-info .edit:hover {
+  transform: translateX(100px);
+  border-left: 100px solid transparent;
+  filter: drop-shadow(-100px 0 #ff8a3c);
+}
+
+.right .user-info p input[type=text] {
+  outline: none;
+  border: 1px solid #9c9c9c;
+}
+
+.right .user-info p input[type=button] {
+  background-color: #ff825c;
+  color: #fff;
+  border: none;
+}
+
+.right .user-info p input[type=button]:focus {
+  background-color: chocolate;
+  outline: none;
 }
 
 .right .user-info .detail ul {

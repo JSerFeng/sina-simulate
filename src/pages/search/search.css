@@ -451,6 +451,94 @@ header .container .log-reg .register::after {
   position: relative;
 }
 
+.main2 .wrap .con-l .card .userBef::after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  content: '';
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.main2 .wrap .con-l .card .userBef {
+  opacity: 0;
+  transform: scale(0);
+  z-index: 2000;
+  box-sizing: border-box;
+  padding: 50px 10px 10px;
+  width: 150px;
+  position: absolute;
+  left: -32px;
+  top: 32px;
+  box-shadow: 0 0 15px #bbbbbb;
+  transition: 0.2s;
+}
+
+.main2 .wrap .con-l .card .userBef .avatar_b {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: #bbbbbb;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -100px);
+}
+
+.main2 .wrap .con-l .card .userBef .username {
+  text-align: center;
+  font-size: 18px;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.main2 .wrap .con-l .card .userBef .introduce {
+  font-size: 14px;
+  color: #808080;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.main2 .wrap .con-l .card .userBef .focus {
+  cursor: pointer;
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+  background-image: url(../../imgs/unfocus.png);
+  background-size: contain;
+}
+
+.main2 .wrap .con-l .card .userBef .focus.on {
+  background-image: url(../../imgs/focus_succ.png);
+}
+
+.main2 .wrap .con-l .card .content_wrap {
+  display: flex;
+}
+
+.main2 .wrap .con-l .card .content_wrap .avatar:hover+.userBef {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.main2 .wrap .con-l .card .content_wrap .userBef:hover {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.main2 .wrap .con-l .card .content_wrap .avatar {
+  margin-right: 10px;
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+
 .main2 .wrap .con-l .card .sub .avatar {
   display: block;
   width: 50px;
@@ -613,7 +701,7 @@ header .container .log-reg .register::after {
   margin: 0 16px 0 58px;
 }
 
-.comment .lists .more{
+.comment .lists .more {
   width: 100%;
   font-size: 12px;
   background-color: #fffae5;

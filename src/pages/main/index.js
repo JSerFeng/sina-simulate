@@ -281,8 +281,8 @@ class Searching {
     const $user = document.getElementsByClassName('show-info')[0]
     const $username = $user.getElementsByClassName('user')[0]
     const $exit = document.getElementsByClassName('exit')[0]
-    if (localStorage.getItem('userInfo')) {
-      userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (sessionStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
       $username.innerText = userInfo.username
 
       $user.onclick = () => {
@@ -300,7 +300,7 @@ class Searching {
         $exit.onclick = null
         axios.post('/user/exit', {}).then(
           value => {
-            localStorage.removeItem('userInfo')
+            sessionStorage.removeItem('userInfo')
             window.open('./index.html', '_self')
           },
           err => {
@@ -389,7 +389,7 @@ class Login$Register {
         ).then(
           data => {
             if (data) {
-              localStorage.setItem('userInfo', JSON.stringify(data))
+              sessionStorage.setItem('userInfo', JSON.stringify(data))
               window.open('./static/user.html')
               window.open('./index.html', '_self')
             }
@@ -517,7 +517,7 @@ class Login$Register {
         ).then(
           data => {
             if (data) {
-              localStorage.setItem('userInfo', JSON.stringify(data))
+              sessionStorage.setItem('userInfo', JSON.stringify(data))
               window.open('./static/user.html', '_self')
             }
           },
@@ -713,7 +713,7 @@ class List {
       if (data.video) {
         const list = this.createVideoEle(data)
         list.onclick = () => {
-          if (localStorage.getItem('userInfo')) {
+          if (sessionStorage.getItem('userInfo')) {
             window.open(`./static/detail.html?aid=${data.aid}`)
           } else {
             show('请先登陆~')
@@ -723,7 +723,7 @@ class List {
       } else {
         const list = this.createImgEle(data)
         list.onclick = () => {
-          if (localStorage.getItem('userInfo')) {
+          if (sessionStorage.getItem('userInfo')) {
             window.open(`./static/detail.html?aid=${data.aid}`)
           } else {
             show('请先登陆~')

@@ -1,12 +1,12 @@
-* {
-  padding: 0;
-  margin: 0;
-}
-
 body {
-  background-image: url(../../imgs/body_bg_page.jpg);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F7F7F7;
+  background-image: url('../../imgs/body_bg.jpg');
   background-repeat: no-repeat;
-  background-color: rgb(191, 228, 236);
+  background-color: rgb(180, 218, 240);
 }
 
 .ban {
@@ -386,96 +386,21 @@ header .container .log-reg .register::after {
   background-color: rgb(110, 110, 110);
 }
 
-._detail {
-  width: 700px;
+.user_main {
+  width: 960px;
   margin: 70px auto;
-  background-color: #fff;
 }
 
-.page {
-  padding: 20px 20px 4px;
-}
+.user_main .wrap_user {}
 
-.page .above {
+.user_main .wrap_user .banner {
+  background-image: url(../../imgs/user_bg_b.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 300px;
+  width: 100%;
   display: flex;
-  color: #f86814;
-}
-
-.page .above .avatar {
-  display: block;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  animation: ilike 5s linear infinite;
-}
-
-.page .above .comment-content {
-  font-size: 12px;
-  padding: 0 15px;
-  box-sizing: border-box;
-  color: #949494;
-}
-
-.page .above .comment-content h1 {
-  color: #000;
-  font-size: 14px;
-  margin: 0;
-  padding: 10px 0;
-}
-
-.page .above .comment-content p {
-  font-size: 14px;
-  color: #3d3d3d;
-}
-
-.page .footbar {
-  border-top: 1px solid #c9c9c9;
-  display: flex;
-  margin: 0;
-  padding: 0;
-  justify-content: space-evenly;
-}
-
-.page .footbar li {
-  font-size: 12px;
-  list-style: none;
-  margin: 0em;
-  padding: 5px;
-  overflow: hidden;
-  cursor: pointer;
-  height: 36px;
-}
-
-.page .footbar li img {
-  width: 15px;
-  margin: 5px;
-}
-
-.page .footbar .on img {
-  filter: drop-shadow(-100px 0 rgb(255, 137, 68));
-  transform: translateX(100px);
-}
-
-.page .footbar .on {
-  color: rgb(255, 137, 68);
-}
-
-.page .footbar li:hover img {
-  transform: translateX(100px);
-  filter: drop-shadow(-100px 0 rgb(255, 137, 68));
-  transition: 0.2s width;
-}
-
-.page .footbar li:active img {
-  width: 20px;
-}
-
-.page .footbar li:hover {
-  color: #eb7350;
-}
-
-.page .footbar li {
-  display: flex;
+  flex-direction: column;
   align-items: center;
 }
-

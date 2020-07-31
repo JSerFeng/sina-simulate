@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的</title>
+  <title>Document</title>
 </head>
 
 <body>
@@ -58,8 +58,9 @@
       </div>
     </div>
   </div>
-  <div class="main">
-    <header id="top">
+
+  <div class="main" id="main">
+    <header class="shadow" id="top">
       <!-- container属性是flex -->
       <div class="container">
         <a href="../index.html">
@@ -78,104 +79,33 @@
         </div>
 
         <nav class="log-reg center">
-          <img src="../../imgs/user.png" alt="">
+          <label for="reg" class="register">注册</label>
+          <label for="log" class="login">登陆</label>
+        </nav>
+        <div class="show-info">
+          <img src="../../imgs/user.png">
           <div class="user">
           </div>
           <nav class="exit">
             注销
           </nav>
-        </nav>
+        </div>
 
       </div>
     </header>
 
-    <div class="content2">
-      <div class="left">
-        <nav>
-          <ul class="top">
-            <li class="nav-item on"><a href="javascript:void(0)">首页</a></li>
-            <li class="nav-item"><a href="javascript:void(0)">我的收藏</a></li>
-            <li class="nav-item"><a href="javascript:void(0)">我的赞</a></li>
-          </ul>
-          <ul class="below">
-            <li><a href="javascript:void(0)">
-                <img src="../../imgs/hot-nav.png">
-                热门微博
-              </a></li>
-            <li><a href="javascript:void(0)">
-                <img src="../../imgs/hot-nav.png">
-                热门视频
-              </a></li>
-          </ul>
-        </nav>
-      </div>
-
-      <div class="mid">
-        <div class="submit">
-          <h4>有什么新鲜事想告诉大家？</h4>
-          <textarea class="blog-input"></textarea>
-          <div class="footbar">
-            <div class="emoji"><img src="../../imgs/emoji.png" alt="">表情</div>
-            <button class="sub-btn">发布</button>
-          </div>
+    <div class="user_main">
+      <div class="wrap_user">
+        <div class="banner">
+          <img alt="" class="avatar">
+          <div class="user_name"></div>
+          <p class="intro"></p>
         </div>
-
-        <div class="con-l">
-
+        <div class="foobar">
+          <span>主页</span>
         </div>
       </div>
-
-      <div class="right">
-        <div class="user-info">
-          <div class="bg">
-            <img src="../../imgs/user_bg.jpg" alt="">
-          </div>
-
-          <div class="detail">
-            <img class="avatar">
-            <h4 class="name" id="user-name">...</h4>
-            <p>
-              <span class="intro"></span>
-              <input type="text" class="hide">
-              <input type="button" value="修改" class="hide">
-              <a class="edit" href="#"></a>
-            </p>
-            <ul>
-              <li class="_li">
-                <h1 class="num">0</h1>
-                <span>关注</span>
-              </li>
-              <li class="_li">
-                <h1 class="num">0</h1>
-                <span>粉丝</span>
-              </li>
-              <li class="_li">
-                <h1 class="num">0</h1>
-                <span>微博</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-
-        <div class="con-r">
-          <div class="hot">
-            <div class="title">热搜榜</div>
-            <div class="content">
-              <ul class="rank">
-                <li>
-                  <span>1</span>
-                  <a href="#">
-                    123
-                    <div class="hot-tag">热</div>
-                  </a>
-                  <span>5151</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="pic_main"></div>
     </div>
   </div>
 </body>

@@ -6,7 +6,8 @@ module.exports={
     detail: './src/pages/detail/detail.js',
     search: './src/pages/search/search.js',
     main: './src/pages/main/index.js',
-    user: './src/pages/user/user.js'
+    user: './src/pages/user/user.js',
+    follows: './src/pages/follows/follows.js'
   },
   output: {
     filename: 'static/js/[name].js',
@@ -32,6 +33,11 @@ module.exports={
       filename: 'static/user.html',
       template: './src/pages/user/user.html',
       chunks: ['user']
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'static/follows.html',
+      template: './src/pages/follows/follows.html',
+      chunks: ['follows']
     })
   ],
   devServer: {

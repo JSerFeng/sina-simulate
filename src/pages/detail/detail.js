@@ -1,6 +1,8 @@
 import './detail.css'
-import '../../utils/header.css'
+// import '../../utils/comment.css'
+
 // 引入工具
+import {Comment} from '../../utils/comment'
 import axios from '../../utils/axios'
 import Mock from 'mockjs'
 import { createElement, render } from '../../utils/vdom2dom'
@@ -8,6 +10,7 @@ import { reactive, effect } from '../../utils/reactive'
 import { show } from '../../utils/showToast'
 
 // 引入图标地址
+import anonymous from '../../imgs/anonymous.png'
 import emoji from '../../imgs/emoji.png'
 import favIcon from '../../imgs/keep.png'
 import shareIcon from '../../imgs/share.png'
@@ -203,12 +206,7 @@ class Init {
     this.init()
   }
   init() {
-    if (!localStorage.getItem('userInfo')) {
-      alert('请先登陆')
-      window.history.go(-1)
-    }
     const param = window.location.search.slice(5)
-    console.log(param);
     this.getData(param)
   }
   fresh(data) {
@@ -216,7 +214,7 @@ class Init {
     $main.innerHTML = `<div class="_detail">
       <div class="page">
         <div class="above">
-          <img alt="" class="avatar">
+          <img alt="" class="avatar" src=${data.user.uimage}>
           <div class="comment-content">
             <h1 class="username">${data.user.username}</h1>
             <span class="time">${new Date(data.adate).toLocaleString()}</span>
@@ -227,51 +225,21 @@ class Init {
           </div>
         </div>
         <ul class="footbar">
-          <li class="item fav ${data.flag.isfavorite==true?'on':''}" data-status="${data.flag.isfavorite==true?1:0}"><img src=${favIcon}>收藏</li>
+          <li class="item fav ${data.flag && data.flag.isfavorite == true ? 'on' : ''}" data-status="${data.flag &&data.flag.isfavorite == true ? 1 : 0}"><img src=${favIcon}>收藏</li>
           <li class="item"><img src=${shareIcon}>转发</li>
-          <li class="item ilike ${data.flag.islike==true?'on':''}" data-status="${data.flag.islike==true?1:0}"><img src=${thumbIcon}><span>${data.alikemount}</span></li>
+          <li class="item ilike ${data.flag && data.flag.islike == true ? 'on' : ''}" data-status="${data.flag &&data.flag.islike == true ? 1 : 0}"><img src=${thumbIcon}><span>${data.alikemount}</span></li>
           <li class="item"><img src=${commentsIcon}><span>0</span></li>
         </ul>
       </div>
-      <div class="comment">
-        <div class="sub">
-          <img
-            src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD"
-            class="avatar">
-          <div class="comment-r">
-            <input type="textarea">
-            <input type="submit" value="评论">
-            <img class="emoji" src=${emoji}>
-          </div>
-        </div>
       
-        <div class="lists">
-          <div class="list">
-            <img
-              src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD"
-              class="avatar">
-            <div class="content">
-              <p class="detail"><span class="reply-name">ly456454</span> ipsum dolor sit, amet consectetur adipisicing elit.
-                Corrupti
-                facere, repellendus laboriosam, harum voluptates incidunt deserunt iure reprehenderit ullam dicta, dignissimos
-                labore cumque odit! Atque accusamus hic tenetur cupiditate quia!</p>
-              <div class="foot-bar">
-                <div class="time">07-12 22:10</div>
-                <div>
-                  <img src=${thumbIcon} class="thumb">
-                  <span>123</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>`
     const m = document.querySelector('.main')
     console.log(m)
     m.appendChild($main)
+    new Comment(document.getElementsByClassName('page')[0], window.location.search.slice(5))
+
     this.addEvent()
-  } 
+  }
   addEvent() {
     const like = document.getElementsByClassName('ilike')[0]
     const fav = document.getElementsByClassName('fav')[0]
@@ -298,7 +266,7 @@ class Init {
         }
       )
     }
-    fav.onclick =()=>{
+    fav.onclick = () => {
       const status = parseInt(fav.getAttribute('data-status'))
       fav.setAttribute('data-status', status ? 0 : 1)
 
@@ -317,7 +285,7 @@ class Init {
     }
   }
   getData(param) {
-    axios.get(`/article/findDetailOne`, {aid:param}).then(
+    axios.get(`/article/findDetailOne`, { aid: param }).then(
       res => {
         this.fresh(res)
       },
@@ -328,6 +296,8 @@ class Init {
   }
 }
 new Init()
+
+
 
 
 // 输入框
@@ -416,8 +386,8 @@ class Searching {
     const $user = document.getElementsByClassName('show-info')[0]
     const $username = $user.getElementsByClassName('user')[0]
     const $exit = document.getElementsByClassName('exit')[0]
-    if (localStorage.getItem('userInfo')) {
-      userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    if (sessionStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
       $username.innerText = userInfo.username
 
       $user.onclick = () => {
@@ -436,7 +406,7 @@ class Searching {
         console.log('exit点击');
         axios.post('/user/exit', {}).then(
           value => {
-            localStorage.removeItem('userInfo')
+            sessionStorage.removeItem('userInfo')
             window.open('./search.html', '_self')
           },
           err => {
@@ -599,9 +569,9 @@ class Login$Register {
           password
         }).then(
           res => {
-            if (!res.flag){
+            if (!res.flag) {
               return Promise.reject(res.errorMsg)
-            }else{
+            } else {
               show('登陆成功！')
               return axios.post('/user/findLoginUser', {})
             }
@@ -611,7 +581,7 @@ class Login$Register {
         ).then(
           res => {
             if (res) {
-              localStorage.setItem('userInfo', JSON.stringify(res))
+              sessionStorage.setItem('userInfo', JSON.stringify(res))
               window.open('./user.html', '_self')
             }
           },

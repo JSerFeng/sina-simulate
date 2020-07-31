@@ -10,6 +10,7 @@ function show(msg, type = 'success') {
       padding: 10px 40px;
       position: fixed;
       top: -100%;
+      box-shadow: 0 0 10px #808080;
       right: 50%;
       transform: translateX(50%);
       background-color: ${type === 'success' ? '#fff' : '#5c5c5c'};
@@ -18,7 +19,9 @@ function show(msg, type = 'success') {
       animation: appear 3s;
       border-top: 5px solid ${type === 'success' ? '#f86814' : '#fff'}
     }
-    
+    .stoast:hover{
+      display: none;
+    }
     @keyframes appear{
       0%{
         top: -100%;
