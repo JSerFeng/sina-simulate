@@ -105,6 +105,10 @@ body {
   background-color: #ff932d;
 }
 
+.show-toast .form-content video{
+  width: 80%;
+}
+
 .show-toast .form-content div {
   display: flex;
   justify-content: center;
@@ -494,14 +498,14 @@ header .container .log-reg .register::after {
   text-align: center;
   font-size: 18px;
   margin: 0;
-  padding: 10px 0;
+  padding: 5px 0;
 }
 
 .main2 .wrap .con-l .card .userBef .introduce {
   font-size: 14px;
   color: #808080;
   margin: 0;
-  padding: 10px 0;
+  padding: 0 0 10px;
 }
 
 .main2 .wrap .con-l .card .userBef .focus {
@@ -514,8 +518,13 @@ header .container .log-reg .register::after {
   background-size: contain;
 }
 
+.main2 .wrap .con-l .card .userBef .focus:hover {
+  background-color: #ce6444;
+  box-shadow: 0 0 15px #ffc670;
+}
+
 .main2 .wrap .con-l .card .userBef .focus.on {
-  background-image: url(../../imgs/focus_succ.png);
+  background-image: url(../../imgs/focus_succ.png) !important;
 }
 
 .main2 .wrap .con-l .card .content_wrap {
@@ -577,7 +586,7 @@ header .container .log-reg .register::after {
 }
 
 .main2 .wrap .con-l .card .content .pic {
-  max-width: 500px;
+  max-width: 100%;
   margin: 10px 0 10px;
 }
 

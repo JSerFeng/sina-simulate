@@ -60,6 +60,10 @@
   </div>
 
   <div class="main" id="main">
+    <label class="edit_bg2" style="margin-top: 50px;">
+      <input type="file" id="bg_b" style="opacity: 0;width: 0;position: absolute;">
+      <img src="../../imgs/edit_bg.png" alt="">
+    </label>
     <header class="shadow" id="top">
       <!-- container属性是flex -->
       <div class="container">
@@ -96,16 +100,26 @@
 
     <div class="user_main">
       <div class="wrap_user">
-        <div class="banner">
-          <img alt="" class="avatar">
-          <div class="user_name"></div>
-          <p class="intro"></p>
+        <label class="edit_bg">
+          <input type="file" id="bg_s" style="opacity: 0;width: 0;position: absolute;">
+          <img src="../../imgs/edit_bg.png" alt="">
+        </label>
+      </div>
+
+      <div class="pic_main">
+        <div class="lists">
+          <ul>
+            <li class="on">博客</li>
+            <li>关注</li>
+            <li>粉丝</li>
+          </ul>
         </div>
-        <div class="foobar">
-          <span>主页</span>
+        <div class="swap">
+          <div class="blog"></div>
+          <div class="focus hide"></div>
+          <div class="befocus hide"></div>
         </div>
       </div>
-      <div class="pic_main"></div>
     </div>
   </div>
 </body>

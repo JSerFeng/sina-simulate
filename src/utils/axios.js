@@ -2,7 +2,7 @@ const options = {
   baseUrl: 'http://192.168.43.88/sina'
 }
 
-function axios(method, url, data) {
+function axios(method, url, data, contentType = 'application/json') {
   const baseUrl = options.baseUrl
   return new Promise((res, err) => {
     const xhr = new XMLHttpRequest()
@@ -29,8 +29,12 @@ function axios(method, url, data) {
     if (method === 'POST') {
       xhr.open(method, url)
       xhr.withCredentials = true
-      xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8')
-      xhr.send(JSON.stringify(data))
+      
+      if (contentType === 'application/json') {
+        xhr.setRequestHeader('Content-Type', contentType)
+        data = JSON.stringify(data)
+      }
+      xhr.send(data)
     }
     xhr.onreadystatechange = () => {
       if (xhr.readyState == 4) {
@@ -44,11 +48,11 @@ function axios(method, url, data) {
   })
 }
 
-axios.get = (url, data) => {
-  return axios('GET', url, data)
+axios.get = (url, data, contentType='application/json') => {
+  return axios('GET', url, data, contentType)
 }
-axios.post = (url, data) => {
-  return axios('POST', url, data)
+axios.post = (url, data, contentType = 'application/json') => {
+  return axios('POST', url, data, contentType)
 }
 
 module.exports = axios

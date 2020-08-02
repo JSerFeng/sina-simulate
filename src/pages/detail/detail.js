@@ -386,8 +386,8 @@ class Searching {
     const $user = document.getElementsByClassName('show-info')[0]
     const $username = $user.getElementsByClassName('user')[0]
     const $exit = document.getElementsByClassName('exit')[0]
-    if (sessionStorage.getItem('userInfo')) {
-      userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    if (localStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(localStorage.getItem('userInfo'))
       $username.innerText = userInfo.username
 
       $user.onclick = () => {
@@ -406,7 +406,7 @@ class Searching {
         console.log('exit点击');
         axios.post('/user/exit', {}).then(
           value => {
-            sessionStorage.removeItem('userInfo')
+            localStorage.removeItem('userInfo')
             window.open('./search.html', '_self')
           },
           err => {
@@ -581,7 +581,7 @@ class Login$Register {
         ).then(
           res => {
             if (res) {
-              sessionStorage.setItem('userInfo', JSON.stringify(res))
+              localStorage.setItem('userInfo', JSON.stringify(res))
               window.open('./user.html', '_self')
             }
           },

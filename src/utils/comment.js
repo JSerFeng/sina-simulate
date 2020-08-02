@@ -83,11 +83,11 @@ class Comment {
   cursor: pointer;
 }
 
-.comment .lists {
+.comment ._lists {
   margin: 0 16px 0 58px;
 }
 
-.comment .lists .list {
+.comment ._lists ._list {
   font-size: 12px;
   padding: 10px 0;
   box-sizing: border-box;
@@ -97,36 +97,36 @@ class Comment {
   border-bottom: 1px solid #dfdfdf;
 }
 
-.comment .lists .list .avatar {
+.comment ._lists ._list .avatar {
   width: 30px;
   height: 30px;
   display: block;
   margin-right: 10px;
 }
 
-.comment .lists .list .reply-name {
+.comment ._lists ._list .reply-name {
   color: #6097D6;
   margin-right: 10px;
 }
 
-.comment .lists .list .content {
+.comment ._lists ._list .content {
   width: 100%;
   /* overflow: hidden; */
 }
 
-.comment .lists .list .content p {
+.comment ._lists ._list .content p {
   padding: 0;
   margin: 0 0 10px
 }
 
-.comment .lists .list .foot-bar {
+.comment ._lists ._list .foot-bar {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
   color: #808080;
 }
 
-.comment .lists .list .foot-bar .thumb {
+.comment ._lists ._list .foot-bar .thumb {
   width: 15px;
   height: 15px;
 }
@@ -143,6 +143,7 @@ class Comment {
 .comment .more:hover {
   background-color: #ffefdb;
 }`
+    $style.setAttribute('scope', 'scope')
     this.node.appendChild($style)
   }
   getData() {
@@ -158,7 +159,7 @@ class Comment {
   }
   // 返回构建好的评论DIV
   buildComment(res) {
-    const userInfo = sessionStorage.getItem('userInfo') || {uimage: anonymous}
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {uimage: anonymous}
     // div是整体评论容器
     const div = document.createElement('div')
     div.className = 'comment'
@@ -174,9 +175,9 @@ class Comment {
           </div>
         </div>
       
-        <div class="lists">
+        <div class="_lists">
       </div>`
-    const $lists = div.getElementsByClassName('lists')[0]
+    const $lists = div.getElementsByClassName('_lists')[0]
 
     // 点击获取更多的按钮
     const $more = document.createElement('div')
@@ -188,7 +189,7 @@ class Comment {
 
     res.list.forEach(data => {
       const list = document.createElement('div')
-      list.className = 'list'
+      list.className = '_list'
       list.innerHTML = `<img
               src=${data.user.uimage}
               class="avatar">
@@ -211,14 +212,14 @@ class Comment {
     return div
   }
   addEvent(div) {
-    const $lists = div.getElementsByClassName('lists')[0]
+    const $lists = div.getElementsByClassName('_lists')[0]
     let currentPart = 1
-    const userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     const self = this
 
     function insertCom(user, value) {
       const list = document.createElement('div')
-      list.className = 'list'
+      list.className = '_list'
       list.innerHTML = `<img
               src=${user.uimage}
               class="avatar">
@@ -267,6 +268,10 @@ class Comment {
     const $addBtn = div.getElementsByTagName('input')[1]
     $addBtn.onclick = addCom
     function addCom(e) {
+      if (!userInfo) {
+        show('请先登录','fail')
+        return
+      }
       $addBtn.onclick = null
       e.preventDefault()
       if ($input.value) {

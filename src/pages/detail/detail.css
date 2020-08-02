@@ -416,16 +416,24 @@ header .container .log-reg .register::after {
   color: #949494;
 }
 
+.page .above .comment-content .time{
+  padding: 0 0 10px;
+}
+
 .page .above .comment-content h1 {
   color: #000;
   font-size: 14px;
   margin: 0;
-  padding: 10px 0;
 }
 
 .page .above .comment-content p {
   font-size: 14px;
+  padding: 10px 0;
   color: #3d3d3d;
+}
+
+.page .above .comment-content img {
+  width: 100%;
 }
 
 .page .footbar {
@@ -478,4 +486,3 @@ header .container .log-reg .register::after {
   display: flex;
   align-items: center;
 }
-

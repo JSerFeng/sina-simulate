@@ -78,13 +78,17 @@
         </div>
 
         <nav class="log-reg center">
-          <img src="../../imgs/user.png" alt="">
+          <label for="reg" class="register">注册</label>
+          <label for="log" class="login">登陆</label>
+        </nav>
+        <div class="show-info">
+          <img src="../../imgs/user.png">
           <div class="user">
           </div>
           <nav class="exit">
             注销
           </nav>
-        </nav>
+        </div>
 
       </div>
     </header>
@@ -111,49 +115,50 @@
       </div>
 
       <div class="mid">
-        <div class="submit">
-          <h4>有什么新鲜事想告诉大家？</h4>
-          <textarea class="blog-input"></textarea>
-          <div class="footbar">
-            <div class="emoji"><img src="../../imgs/emoji.png" alt="">表情</div>
-            <button class="sub-btn">发布</button>
-          </div>
-        </div>
-
         <div class="con-l">
-
         </div>
       </div>
 
       <div class="right">
         <div class="user-info">
           <div class="bg">
-            <img src="../../imgs/user_bg.jpg" alt="">
+            <input id="user_bg_file" type="file" accept=".png, .jpg, .jpeg" style="opacity: 0;position: absolute;">
+            <label for="user_bg_file" class="Bg"></label>
           </div>
 
           <div class="detail">
-            <img class="avatar">
-            <h4 class="name" id="user-name">...</h4>
+            <input type="file" id="avatar-image" accept=".jpg, .jpeg, .png" name="image"
+              style="opacity: 0;position: absolute;">
+            <label for="avatar-image" class="avatar">
+            </label>
+            <h4 class="name" id="user-name">
+              <span class="myname"></span>
+              <input type="text" class="hide">
+              <input type="button" value="修改" class="hide">
+              <a class="editname" href="#"></a>
+            </h4>
             <p>
               <span class="intro"></span>
               <input type="text" class="hide">
               <input type="button" value="修改" class="hide">
               <a class="edit" href="#"></a>
             </p>
-            <ul>
-              <li class="_li">
-                <h1 class="num">0</h1>
-                <span>关注</span>
-              </li>
-              <li class="_li">
-                <h1 class="num">0</h1>
-                <span>粉丝</span>
-              </li>
-              <li class="_li">
-                <h1 class="num">0</h1>
-                <span>微博</span>
-              </li>
-            </ul>
+            <a class="toFollows">
+              <ul>
+                <li class="_li">
+                  <h1 class="num">0</h1>
+                  <span>关注</span>
+                </li>
+                <li class="_li">
+                  <h1 class="num">0</h1>
+                  <span>粉丝</span>
+                </li>
+                <li class="_li">
+                  <h1 class="num">0</h1>
+                  <span>微博</span>
+                </li>
+              </ul>
+            </a>
           </div>
         </div>
 

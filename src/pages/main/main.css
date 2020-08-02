@@ -578,6 +578,10 @@ header .container .log-reg .register::after {
   overflow: hidden;
 }
 
+.home .lists .list video{
+  width: 300px;
+}
+
 .home .lists .list .list-content-video {
   width: 340px;
 }
@@ -692,6 +696,7 @@ header .container .log-reg .register::after {
   display: block;
   width: 158px;
   height: 102px;
+  background-color: rgb(235, 235, 235);
   overflow: hidden;
 }
 
@@ -710,15 +715,18 @@ header .container .log-reg .register::after {
 }
 
 .home .lists .list-content-img .list-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
   position: relative;
   color: #333333;
   font-size: 14px;
-  height: 48px;
+  height: 68px;
   line-height: 24px;
   overflow: hidden;
 }
 
-.home .lists .list-content-img .list-title::before {
+/* .home .lists .list-content-img .list-title::before {
   content: '...';
   position: absolute;
   right: 0;
@@ -727,18 +735,17 @@ header .container .log-reg .register::after {
   line-height: 20px;
   width: 20px;
   height: 20px;
-  background-color: #fff;
+  background-color: rgb(196, 196, 196);
 }
 
 .home .lists .list-content-img .list-title::after {
   content: '';
-  display: inline;
   width: 20px;
   height: 20px;
   position: absolute;
-  background-color: #fff;
+  background-color: rgb(0, 17, 255);
   right: 20px;
-}
+} */
 
 .home .lists .list-content-img .sub-info img {
   border-radius: 50%;
@@ -861,75 +868,4 @@ header .container .log-reg .register::after {
   font-size: 12px;
   color: #808080;
   margin-bottom: 10px;
-}
-
-.right-nav .hot {
-  width: 340px;
-  padding: 20px;
-  color: #333333;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-  background-color: #F2F2F5;
-  border-top: 1px solid #eb7350;
-}
-
-.right-nav .hot h1 {
-  margin: 0 0 16px;
-  font-size: 18px;
-}
-
-.right-nav .lists .list {
-  display: block;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-start;
-  height: 50px;
-  color: #333333;
-  text-decoration: none;
-}
-
-.right-nav .lists .list:hover .right-nav .lists .list .container {
-  color: #eb7350;
-}
-
-.right-nav .lists .list:hover .right-nav .lists .list .img img {
-  transform: scale(1.2);
-}
-
-.right-nav .lists .list .img {
-  overflow: hidden;
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
-}
-
-.right-nav .lists .list .img img {
-  width: 50px;
-  transition: 0.2s;
-}
-
-.right-nav .lists .list .contain {
-  width: 230px;
-  height: 100%;
-}
-
-.right-nav .lists .list .contain .title {
-  font-size: 14px;
-  font-weight: 500;
-  height: 20px;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 3px 0;
-}
-
-.right-nav .lists .list .contain .title:hover {
-  color: #eb7350;
-}
-
-.right-nav .lists .list .contain span {
-  font-size: 12px;
-  color: #808080;
-  margin-right: 10px;
 }

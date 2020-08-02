@@ -189,7 +189,6 @@ body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: ;
 }
 
 .show-toast .form-content button {
@@ -231,17 +230,42 @@ header {
   position: fixed;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 0 20px #e4e4e4;
+}
+
+header .container .log-reg {
+  position: relative;
+  height: 30px;
+  color: rgb(110, 110, 110);
+  line-height: 30px;
+  box-sizing: border-box;
+  /* padding: 0 10px; */
+  cursor: pointer;
 }
 
 header .exit {
+  color: #808080;
+  margin: 15px;
   cursor: pointer;
-  margin: 20px;
   font-size: 13px;
 }
 
 header .exit:hover {
   color: #ce6444;
+}
+
+header .show-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+header .show-info img {
+  width: 30px;
+  height: 30px;
+}
+
+header #tohome {
+  cursor: pointer;
 }
 
 header .container {
@@ -374,7 +398,7 @@ header .container .search-container .search-dragdown .li .hot-tag {
   background-color: #eb7350;
 }
 
-header .container .log-reg {
+header .container .log-reg label {
   position: relative;
   height: 30px;
   color: rgb(110, 110, 110);
@@ -384,10 +408,16 @@ header .container .log-reg {
   cursor: pointer;
 }
 
-header .container .log-reg img {
-  width: 30px;
-  position: relative;
-  z-index: 1200;
+header .container .log-reg .register::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: block;
+  width: 1px;
+  height: 50%;
+  background-color: rgb(110, 110, 110);
 }
 
 .main .content2 {
@@ -449,74 +479,6 @@ header .container .log-reg img {
 
 .left ul li a img {
   width: 15px;
-}
-
-.mid .submit {
-  padding: 15px;
-  margin: 0 0 15px;
-  width: 600px;
-  background-color: #fff;
-}
-
-.mid .submit h4 {
-  padding: 0;
-  margin: 0 0 5px;
-  font-size: 14px;
-  font-weight: normal;
-  color: #3480af;
-  box-sizing: border-box;
-}
-
-.mid .submit .blog-input {
-  resize: none;
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  height: 68px;
-  border: 1px solid #bdbdbd;
-}
-
-.mid .submit .blog-input:focus {
-  outline: none;
-  border: 1px solid #ff932d;
-}
-
-.mid .submit .footbar {
-  width: 100%;
-  height: 35px;
-  line-height: 35px;
-  font-size: 12px;
-  color: #808080;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.mid .submit .footbar img {
-  width: 20px;
-  margin: 0 5px 0 0;
-  vertical-align: middle;
-}
-
-.mid .submit .footbar :hover {
-  color: #eb7350;
-  cursor: pointer;
-}
-
-.mid .submit .footbar .sub-btn {
-  border: none;
-  color: #fff;
-  height: 80%;
-  padding: 0 1.5em;
-  background-color: #eb7350;
-}
-
-.mid .submit .footbar .sub-btn:focus {
-  outline: none;
-}
-
-.mid .submit .footbar .sub-btn:hover {
-  background-color: #ff932d;
 }
 
 .con-l {
@@ -738,24 +700,51 @@ a {
   overflow: hidden;
 }
 
-.right .user-info .bg img {
+.right .user-info .bg {
+  position: relative;
   width: 258px;
+  height: 100px;
+}
+
+.right .user-info .bg label {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #f3f3f3;
+  background-size: cover;
+  background-position: center;
 }
 
 .right .user-info .detail {
   position: relative;
 }
 
-.right .user-info .detail .avatar {
-  background-color: bisque;
+.right .user-info .detail #avatar-image {
   display: block;
   position: absolute;
   left: 50%;
-  width: 60px;
-  height: 60px;
   border-radius: 50%;
   transform: translate(-50%, -60%);
-  box-shadow: 0 0 15px #e0e0e0;
+  width: 80px;
+  height: 80px;
+}
+
+.right .user-info .detail label {
+  cursor: pointer;
+  z-index: 1000;
+  width: 80px;
+  height: 80px;
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  overflow: hidden;
+  background-color: #dfdfdf;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
 }
 
 .right .user-info .detail h4 {
@@ -763,19 +752,35 @@ a {
   top: 30px;
   text-align: center;
   font-size: 18px;
-  padding: 10px;
   margin: 0;
+}
+
+.right .user-info h4 input[type=text] {
+  outline: none;
+  border: 1px solid #9c9c9c;
+}
+
+.right .user-info h4 input[type=button] {
+  background-color: #ff825c;
+  color: #fff;
+  border: none;
+}
+
+.right .user-info h4 input[type=button]:focus {
+  background-color: chocolate;
+  outline: none;
 }
 
 .right .user-info p {
   position: relative;
+  color: #808080;
   top: 10px;
   padding: 10px 20px;
   color: #333333;
   font-size: 14px;
 }
 
-.right .user-info .edit {
+.right .user-info .edit, .editname {
   display: block;
   position: absolute;
   bottom: 10px;
@@ -787,7 +792,7 @@ a {
   background-size: contain;
 }
 
-.right .user-info .edit:hover {
+.right .user-info .edit:hover, .editname:hover {
   transform: translateX(100px);
   border-left: 100px solid transparent;
   filter: drop-shadow(-100px 0 #ff8a3c);
@@ -810,6 +815,7 @@ a {
 }
 
 .right .user-info .detail ul {
+  cursor: pointer;
   font-size: 14px;
   padding: 0;
   margin: 20px 0 0;

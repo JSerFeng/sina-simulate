@@ -1,6 +1,7 @@
 // css
 import './main.css'
 // 引入工具
+import {HotRank} from '../../utils/HotRank'
 import axios from '../../utils/axios'
 import Mock from 'mockjs'
 import { createElement, render } from '../../utils/vdom2dom'
@@ -210,19 +211,13 @@ class Searching {
       if (timer)
         clearTimeout(timer);
       timer = setTimeout(() => {
-        // axios
-        // let res 
-        // axios(this.mehod, this.url).then(data=>{
-        //   this.refresh(data)
-        // })
-        let randNum = Math.floor(Math.random() * 10)
-        for (let i = 0; i < randNum; i++) {
-          baseData.searching[i] = {
-            val: Random.ctitle(Math.floor(Math.random() * 15)),
-            isHot: Math.floor(Math.random() * 2)
-          }
-        }
-        this.refresh(baseData.searching)
+        const that = this
+        axios.get('/article/pageQuery', { cid: '', currentPage: '', aword: this.$search.value })
+          .then(
+            res => {
+              that.refresh(res.list)
+            }
+          )
       }, 500)
     }),
       this.$search.addEventListener('blur', ({ target }) => {
@@ -231,20 +226,13 @@ class Searching {
       }),
       this.$search.addEventListener('focus', ({ target }) => {
         this.$show.classList.remove("hide")
-        // axios
-        // let res 
-        // axios(this.mehod, this.url, '/').then(data=>{
-        //   this.refresh(data)
-        // })
-        let randNum = Math.floor(Math.random() * 10)
-        for (let i = 0; i < randNum; i++) {
-          baseData.searching[i] = {
-            val: Random.ctitle(Math.floor(Math.random() * 15)),
-            isHot: Math.floor(Math.random() * 2),
-            aid: Random.integer(0, 999)
-          }
-        }
-        this.refresh(baseData.searching)
+        const that = this
+        axios.get('/article/findHotArticle')
+          .then(
+            res => {
+              that.refresh(res)
+            }
+          )
       })
     this.$show.onmouseover = () => { this.focus = true }
     this.$show.onmouseout = () => { this.focus = false }
@@ -258,7 +246,7 @@ class Searching {
       round.classList.add('round')
       div.appendChild(round)
       const span = document.createElement('span')
-      span.innerHTML = data.val
+      span.innerHTML = data.aword
       div.appendChild(span)
       if (data.isHot) {
         const hotTag = document.createElement('span')
@@ -281,8 +269,8 @@ class Searching {
     const $user = document.getElementsByClassName('show-info')[0]
     const $username = $user.getElementsByClassName('user')[0]
     const $exit = document.getElementsByClassName('exit')[0]
-    if (sessionStorage.getItem('userInfo')) {
-      userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    if (localStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(localStorage.getItem('userInfo'))
       $username.innerText = userInfo.username
 
       $user.onclick = () => {
@@ -300,7 +288,7 @@ class Searching {
         $exit.onclick = null
         axios.post('/user/exit', {}).then(
           value => {
-            sessionStorage.removeItem('userInfo')
+            localStorage.removeItem('userInfo')
             window.open('./index.html', '_self')
           },
           err => {
@@ -389,7 +377,7 @@ class Login$Register {
         ).then(
           data => {
             if (data) {
-              sessionStorage.setItem('userInfo', JSON.stringify(data))
+              localStorage.setItem('userInfo', JSON.stringify(data))
               window.open('./static/user.html')
               window.open('./index.html', '_self')
             }
@@ -517,7 +505,7 @@ class Login$Register {
         ).then(
           data => {
             if (data) {
-              sessionStorage.setItem('userInfo', JSON.stringify(data))
+              localStorage.setItem('userInfo', JSON.stringify(data))
               window.open('./static/user.html', '_self')
             }
           },
@@ -703,17 +691,22 @@ class List {
     // axios(method, url, data.then(data=>{
     //   this.get(data)
     // }))
-    this.run(baseData.lists)
-    this.animation()
+    axios.get('/article/pageQuery', { cid: '', currentPage: '', aword: ''})
+    .then(res => {
+      this.run(res.list)
+      this.animation()
+    }, err => {
+      alert('请先登陆')
+      window.open('../index.html', '_self')
+    })
   }
   run(res) {
     const $lists = document.getElementsByClassName('lists')[0]
     res.forEach(data => {
-      console.log(data);
-      if (data.video) {
+      if (data.avideo) {
         const list = this.createVideoEle(data)
         list.onclick = () => {
-          if (sessionStorage.getItem('userInfo')) {
+          if (localStorage.getItem('userInfo')) {
             window.open(`./static/detail.html?aid=${data.aid}`)
           } else {
             show('请先登陆~')
@@ -723,11 +716,7 @@ class List {
       } else {
         const list = this.createImgEle(data)
         list.onclick = () => {
-          if (sessionStorage.getItem('userInfo')) {
-            window.open(`./static/detail.html?aid=${data.aid}`)
-          } else {
-            show('请先登陆~')
-          }
+          window.open(`./static/detail.html?aid=${data.aid}`)
         }
         $lists.appendChild(list)
       }
@@ -737,19 +726,19 @@ class List {
   createVideoEle(data) {
     const vdom = c('div', { class: 'list' }, [
       c('div', { class: 'video' }, [
-        c('video', { controls: 'controls', src: data.url }, '')
+        c('video', { controls: 'controls', src: data.avideo }, '')
       ]),
       c('a', {}, [
         c('div', { class: 'list-content-video' }, [
           c('div', { class: 'list-title' }, [
-            c('span', { class: 'keyword' }, data.keyword),
-            c('span', {}, data.title)
+            c('span', { class: 'keyword' }, data.aword.slice(0,3)),
+            c('span', {}, data.aword.slice(3))
           ]),
 
           c('div', { class: 'sub-info' }, [
-            c('img', { class: 'avatar', src: data.avatar }),
-            c('span', {}, data.username),
-            c('span', {}, data.dateTime)
+            c('img', { class: 'avatar', src: data.user.uimage }),
+            c('span', {}, data.user.username),
+            c('span', {}, new Date(data.adate).toLocaleString())
           ]),
 
           c('div', { class: 'bottom' }, [
@@ -771,19 +760,19 @@ class List {
   createImgEle(data) {
     const vdom = c('div', { class: "list-img list" }, [
       c('div', { class: 'img' }, [
-        c('img', { src: data.img })
+        c('img', { src: data.aimage })
       ]),
       c('a', {}, [
         c('div', { class: 'list-content-img' }, [
           c('div', { class: 'list-title' }, [
-            c('span', { class: 'keyword' }, data.keyword),
-            c('span', {}, data.title)
+            c('span', { class: 'keyword' }, data.aword.slice(0,3)),
+            c('span', {}, data.aword.slice(3))
           ]),
           c('div', { class: 'foot-bar' }, [
             c('div', { class: 'sub-info' }, [
-              c('img', { class: 'avatar', src: data.avatar }, undefined),
-              c('span', {}, data.username),
-              c('span', {}, data.dateTime)
+              c('img', { class: 'avatar', src: data.user.uimage }, undefined),
+              c('span', {}, data.user.username),
+              c('span', {}, data.adate)
             ]),
             c('div', { class: 'bottom' }, [
               c('div', { class: 'comments' }, [
@@ -827,33 +816,6 @@ new List()
 
 
 // 右侧热门
-class RightNav {
-  constructor(method, url, data) {
-    this.run(method, url, data)
-  }
-  run(method, url, data) {
-    //axios
-    const $lists = document.getElementById('right-hot')
-    baseData.lists.forEach(list => {
-      if (list.img)
-        $lists.appendChild(this.create(list))
-    })
-  }
-  create(data) {
-    let Vdom = c('a', { class: 'list', href: 'javascript: (void 0)' }, [
-      c('div', { class: 'img' }, [
-        c('img', { src: data.img })
-      ]),
-      c('div', { class: 'contain' }, [
-        c('h1', { class: 'title' }, data.keyword),
-        c('div', { class: 'bottom-bar' }, [
-          c('span', {}, data.read),
-          c('span', {}, data.discuss)
-        ])
-      ])
-    ])
-    return render(Vdom)
-  }
-}
-new RightNav()
+
+new HotRank(document.getElementsByClassName('right-nav')[0])
 

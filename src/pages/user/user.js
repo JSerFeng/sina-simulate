@@ -6,6 +6,11 @@ import Mock from 'mockjs'
 import { createElement, render } from '../../utils/vdom2dom'
 import { reactive, effect } from '../../utils/reactive'
 import { show } from '../../utils/showToast'
+import { createBlog } from '../../utils/sendBlog'
+import { Searching, Login$Register } from '../../utils/SearchLogin'
+
+// 用户图片
+import userBg from '../../imgs/user_bg.jpg'
 
 // 引入图标地址
 import commentsIcon from '../../imgs/comments.png'
@@ -200,119 +205,6 @@ const baseData = {
   }]
 }
 // 搜索框输入时展示热度排行（加防抖）
-class Searching {
-  constructor(method, url) {
-    this.$search = document.querySelector('.search-input')
-    this.$show = document.querySelector('.search-dragdown')
-    this.focus = false
-    this.mehod = method,
-      this.url = url,
-      this.onTyping()
-    this.btnEvent()
-  }
-  // 基础防抖 **
-  onTyping() {
-    let timer //定时器
-    this.$search.addEventListener('keyup', ({ target }) => {
-      if (timer)
-        clearTimeout(timer);
-      timer = setTimeout(() => {
-        // axios
-        // let res 
-        // axios(this.mehod, this.url).then(data=>{
-        //   this.refresh(data)
-        // })
-        let randNum = Math.floor(Math.random() * 10)
-        for (let i = 0; i < randNum; i++) {
-          baseData.searching[i] = {
-            val: Random.ctitle(Math.floor(Math.random() * 15)),
-            isHot: Math.floor(Math.random() * 2),
-            aid: Random.integer(0, 999)
-          }
-        }
-        this.refresh(baseData.searching)
-      }, 500)
-    }),
-      this.$search.addEventListener('blur', ({ target }) => {
-        if (!this.focus)
-          this.$show.classList.add("hide")
-      }),
-      this.$search.addEventListener('focus', ({ target }) => {
-        this.$show.classList.remove("hide")
-        // axios
-        // let res 
-        // axios(this.mehod, this.url, '/').then(data=>{
-        //   this.refresh(data)
-        // })
-        let randNum = Math.floor(Math.random() * 10)
-        for (let i = 0; i < randNum; i++) {
-          baseData.searching[i] = {
-            val: Random.ctitle(Math.floor(Math.random() * 15)),
-            isHot: Math.floor(Math.random() * 2),
-            aid: Random.integer(0, 999)
-          }
-        }
-
-        this.refresh(baseData.searching)
-      })
-    this.$show.onmouseover = () => { this.focus = true }
-    this.$show.onmouseout = () => { this.focus = false }
-
-  }
-  refresh(res) {
-    this.$show.innerHTML = `<div style="color:#eb7350" class="li">查看完整热搜榜》</div>`
-    res.forEach((data, i) => {
-      const div = document.createElement('div')
-      const round = document.createElement('span')
-      round.innerHTML = i + 1
-      round.classList.add('round')
-      div.appendChild(round)
-      const span = document.createElement('span')
-      span.innerHTML = data.val
-      div.appendChild(span)
-      if (data.isHot) {
-        const hotTag = document.createElement('span')
-        hotTag.classList.add('hot-tag')
-        hotTag.classList.add('center')
-        hotTag.innerHTML = '热'
-        div.appendChild(hotTag)
-      }
-      div.classList.add('li')
-      div.onclick = () => {
-        window.open(`./search.html?${data.isHot}`, '_self')
-      }
-      this.$show.appendChild(div)
-    })
-  }
-  btnEvent() {
-    // 鼠标移入搜索图标变色
-    const $search = document.getElementsByClassName('search-icon')[0]
-    $search.onmouseover = () => {
-      $search.src = searchIconActive
-    }
-    $search.onmouseout = () => {
-      $search.src = searchIcon
-    }
-    // 点击搜索
-    $search.onclick = () => {
-      // axios
-      window.open(`./search.html?aword=${this.$search.value}`, '_self')
-    }
-
-    const $exit = document.getElementsByClassName('exit')[0]
-    $exit.onclick = () => {
-      axios.post('/user/exit', {}).then(
-        res => {
-          sessionStorage.removeItem('userInfo')
-          window.open('../index.html', '_self')
-        },
-        err => {
-          show('注销失败', 'fail')
-        }
-      )
-    }
-  }
-}
 new Searching()
 
 
@@ -322,39 +214,54 @@ class Init {
     this.init()
   }
   init() {
+    show('点击头像和头像后的背景即可切换背景噢')
     const $user = document.getElementsByClassName('user')[0]
     const $avatar = document.getElementsByClassName('avatar')[0]
-    const $name = document.getElementById('user-name')
+    const $name = document.getElementsByClassName('myname')[0]
+    const $editName = $name.parentNode.getElementsByTagName('a')[0]
     const $intro = document.getElementsByClassName('intro')[0]
     const $edit = document.getElementsByClassName('edit')[0]
+    const $toFollows = document.getElementsByClassName('toFollows')[0]
+    const $bg = document.getElementsByClassName('Bg')[0]
+
 
     let userInfo
-    if (userInfo = JSON.parse(sessionStorage.getItem('userInfo'))) {
+    if (userInfo = JSON.parse(localStorage.getItem('userInfo'))) {
       $user.innerText = `${userInfo.username}`
-      $avatar.src = userInfo.uimage
+      $avatar.style['background-image'] = `url(${userInfo.uimage})`
       $name.innerText = userInfo.username
       $intro.innerText = userInfo.introduce
+      $editName.isOpen = false
+      $editName.onclick = () => editIntro($editName)
       $edit.isOpen = false
-      $edit.onclick = editIntro
+      $edit.onclick = () => editIntro($edit)
+      $bg.style['background-image'] = `url(${userInfo.userPhoto.bigphoto})`
+
+
+      // 前往个人页
+      $toFollows.onclick = () => {
+        window.open(`./follows.html?uid=${userInfo.uid}`)
+      }
+
+
       // 隐藏输入框
-      function close() {
-        $intro.classList.remove('hide')
-        const $inputs = $edit.parentNode.getElementsByTagName('input');
+      function close(msg, node) {
+        msg.classList.remove('hide')
+        const $inputs = node.parentNode.getElementsByTagName('input');
         Array.prototype.forEach.call($inputs, input => input.classList.add('hide'))
       }
       // 修改简介
-      function editIntro(e) {
-        if ($edit.isOpen) {
-          $edit.isOpen = false
-          close()
+      function editIntro(node) {
+        console.log(node);
+        if (node.isOpen) {
+          node.isOpen = false
+          close(node.parentNode.getElementsByTagName('span')[0], node)
         } else {
-          $edit.isOpen = true
-          $intro.classList.add('hide')
+          node.isOpen = true
+          node.parentNode.getElementsByTagName('span')[0].classList.add('hide')
 
-          const $input = $edit.parentNode.getElementsByTagName('input')[0]
-          const $btn = $edit.parentNode.getElementsByTagName('input')[1]
-          
-          console.log($input,$btn);
+          const $input = node.parentNode.getElementsByTagName('input')[0]
+          const $btn = node.parentNode.getElementsByTagName('input')[1]
 
           $input.classList.remove('hide')
           $btn.classList.remove('hide')
@@ -362,13 +269,16 @@ class Init {
           $btn.onclick = subIntro
           function subIntro() {
             $btn.onclick = null
-            axios.post('/user/setIntroduce', { introduce: $input.value }).then(
+            const p = node === $edit ? axios.post('/user/setIntroduce', { introduce: $input.value }) : axios.get('/user/setUsername', { username: $input.value ,uid: parseInt(userInfo.uid) })
+            p.then(
               res => {
-                $intro.innerText = $input.value
-                const user = JSON.parse(sessionStorage.getItem('userInfo'))
-                user.introduce = $input.value
-                sessionStorage.setItem('userInfo', JSON.stringify(user))
-                close()
+                if (res.flag) {
+                  node.parentNode.getElementsByTagName('span')[0].innerText = $input.value
+                  const user = JSON.parse(localStorage.getItem('userInfo'))
+                  node === $edit ? user.introduce = $input.value : user.username = $input.value
+                  localStorage.setItem('userInfo', JSON.stringify(user))
+                  close(node.parentNode.getElementsByTagName('span')[0], node)
+                }
                 show(res.errorMsg)
               },
               err => show(err, 'fail')
@@ -379,6 +289,7 @@ class Init {
         }
       }
     } else {
+      alert(localStorage.getItem('userInfo'))
       window.open('../index.html', '_self')
     }
 
@@ -386,8 +297,45 @@ class Init {
     const $foc = document.getElementsByClassName('_li')[0].getElementsByTagName('h1')[0]
     const $bef = document.getElementsByClassName('_li')[1].getElementsByTagName('h1')[0]
 
-    $foc.innerText = JSON.parse(sessionStorage.getItem(userInfo)).focus.focusNub
-    $bef.innerText = JSON.parse(sessionStorage.getItem(userInfo)).focus.befocusNub
+    $foc.innerText = JSON.parse(localStorage.getItem('userInfo')).focus.focusNub
+    $bef.innerText = JSON.parse(localStorage.getItem('userInfo')).focus.befocusNub
+
+    // 改头像
+    const $file = document.getElementById('avatar-image')
+
+    $file.onchange = changeAvatar
+    function changeAvatar() {
+      const file = URL.createObjectURL($file.files[0])
+      const formDataMedia = new FormData()
+      formDataMedia.set('upload', $file.files[0])
+      axios.post(`/upload/imageUpload?id=${userInfo.uid}&status=1`, formDataMedia, 'multipart/form-data')
+        .then(
+          res => {
+            show(res.errorMsg)
+            $avatar.style['background-image'] = `url(${file})`
+          },
+          err => show(err, 'fail')
+        )
+    }
+
+    // 改背景
+    const $userBgFile = document.getElementById('user_bg_file')
+    const $bgLabel = document.getElementsByClassName('Bg')[0]
+    const $bgData = new FormData()
+
+    $userBgFile.onchange = e => {
+      $bgData.set('upload', $userBgFile.files[0])
+      axios.post(`/upload/imageUpload?id=${userInfo.userPhoto.pid}&status=4`, $bgData, 'multipart/form-data')
+        .then(
+          res => {
+            show(res.errorMsg)
+            $bgLabel.style['background-image'] = `url(${URL.createObjectURL($userBgFile.files[0])})`
+          },
+          err => {
+            show(err, 'fail')
+          }
+        )
+    }
   }
 }
 new Init()
@@ -398,6 +346,9 @@ class ContentList {
     this.getData()
   }
   fresh(data = []) {
+    const $mid = document.getElementsByClassName('mid')[0]
+    $mid.insertBefore(createBlog(), $mid.children[0])
+
     // 创建列表的每一个微博
     const $con = document.getElementsByClassName('con-l')[0]
     data.forEach(list => {
@@ -460,64 +411,13 @@ class ContentList {
     // 给评论添加点击事件控制评论的显示隐藏
     const $opens = document.getElementsByClassName('open-fold')
     const $comments = document.getElementsByClassName('comment')
+
     let isOpen = Array($opens.length).fill(0) //表示是否打开
     for (let i = 0; i < $opens.length; i++) {
       $opens[i].onclick = function () {
         if (isOpen[i]) $comments[i].classList.add('hide')
         else $comments[i].classList.remove('hide')
         isOpen[i] = !isOpen[i]
-      }
-    }
-    // 给评论提交添加事件, 给提交按钮添加提交事件
-    const $textareas = document.getElementsByClassName('textarea')
-    const $submits = document.getElementsByClassName('_submit')
-    let value = ''
-    for (let i = 0; i < $textareas.length; i++) {
-      $textareas[i].onkeyup = function ({ target }) {
-        value = target.value
-      }
-      /**
-       * 添加评论
-       */
-      $submits[i].onclick = submit
-
-      function submit({ target }) {
-        $submits[i].onclick = null
-        $submits[i].classList.add('ban')
-        // 请求数据成功后
-        axios('post', 'comment', {
-          value
-        }).then(
-          res => {
-            //...
-            $lists.appendChild(div)
-            $submits[i].onclick = null
-            $submits.value = '...'
-          },
-          err => {
-            alert(err)
-            $submits[i].onclick = submit
-            $submits[i].classList.remove('ban')
-          }
-        )
-        let time = new Date().toLocaleString()
-        let name = sessionStorage.getItem('userinfo')
-        let $lists = target.parentNode.parentNode.parentNode.getElementsByClassName('lists')[0]
-        let dom = `<img src="https://tvax4.sinaimg.cn/crop.0.0.1002.1002.50/005GnyQZly8gbw9lljbr8j30ru0ruq68.jpg?KID=imgbed,tva&Expires=1594559187&ssig=uU%2BPJPHyeD" class="avatar">
-              <div class="content">
-                <p class="detail"><span class=${name}>ly456454</span>${value}</p>
-                <div class="foot-bar">
-                  <div class="time">${time}</div>
-                  <div>
-                    <img src=${thumbIcon} class="thumb">
-                    <span>0</span>
-                  </div>
-                </div>
-              </div>`
-        const div = document.createElement('div')
-        div.className = 'list'
-        div.innerHTML = dom
-        // $lists.appendChild(div) //请求成功后执行promise中的这个语句，写在这里作提醒
       }
     }
   }
